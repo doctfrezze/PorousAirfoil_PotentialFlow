@@ -10,8 +10,8 @@ from COMPUTATION.STREAMLINE_VPM import STREAMLINE_VPM
 
 
 
-def PLOT(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoAR,lam,gamma):
-
+def PLOT(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma):
+    AoAR = AoA*(np.pi/180)  
     if (flagPlot[4] == 1 or flagPlot[5] == 1):                                      # If we are plotting streamlines or pressure coefficient contours
         # Grid parameters
         nGridX = 100                                                                # X-grid for streamlines and contours
@@ -122,7 +122,7 @@ def PLOT(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoAR,lam,gamma):
         plt.ylabel('Y Units')                                                       # Set Y-label
         plt.gca().set_aspect('equal')                                               # Set aspect ratio equal
 
-    # FIGURE: Pressure coefficient comparison (XFOIL vs. VPM)
+    # FIGURE: Pressure coefficient
     if (flagPlot[3] == 1):
         fig = plt.figure(4)                                                         # Create figure
         plt.cla()                                                                   # Get ready for plotting

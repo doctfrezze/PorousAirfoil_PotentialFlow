@@ -3,11 +3,13 @@
 import numpy as np
 import math as math
 
-def GENERATE_NACA4(NameAirfoil, c=1.0, n=100):
+def GENERATE_NACA4(NameAirfoil, c=1.0, n=100, power=1.0):
     m = int(NameAirfoil[0])*0.01
     p = int(NameAirfoil[1])*0.1
     t = int(NameAirfoil[2:4])*0.01
-    x = (1 - np.cos(np.linspace(0, np.pi, n))) * c / 2
+    beta = np.linspace(0, np.pi, n)
+    x_dist = (1 - np.cos(beta)) / 2
+    x = (x_dist**power) * c
     yt = 5 * t * c * (0.2969 * np.sqrt(x / c) - 0.1260 * (x / c) - 0.3516 * (x / c)**2 
                       + 0.2843 * (x / c)**3 - 0.1015 * (x / c)**4)
     
