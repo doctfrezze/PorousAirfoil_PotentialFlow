@@ -1,35 +1,4 @@
 # FUNCTION - COMPUTE X AND Y GEOMETRIC INTEGRALS FOR SOURCE PANEL METHOD
-# Written by: JoshTheEngineer
-# YouTube   : www.youtube.com/joshtheengineer
-# Website   : www.joshtheengineer.com
-# Started   : 01/23/19
-# Updated   : 01/23/19 - Started code in MATLAB
-#                      - Works as expected
-#           : 02/03/19 - Transferred to Python
-#                      - Works as expected
-#           : 04/28/20 - Fixed E value error handling
-#
-# PURPOSE
-# - Compute the geometric integral at point P due to source panels
-# - Source panel strengths are constant, but can change from panel to panel
-# - Geometric integral for X-direction: Mx(pj)
-# - Geometric integral for Y-direction: My(pj)
-#
-# REFERENCE
-# - [1]: Streamline Geometric Integral SPM, Mx(pj) and My(pj)
-#           Link: https://www.youtube.com/watch?v=BnPZjGCatcg
-#
-# INPUTS
-# - XP  : X-coordinate of computation point, P
-# - YP  : Y-coordinate of computation point, P
-# - XB  : X-coordinate of boundary points
-# - YB  : Y-coordinate of boundary points
-# - phi : Angle between positive X-axis and interior of panel
-# - S   : Length of panel
-# 
-# OUTPUTS
-# - Mx  : Value of X-direction geometric integral (Ref [1])
-# - My  : Value of Y-direction geometric integral (Ref [1])
 
 import numpy as np
 import math as math

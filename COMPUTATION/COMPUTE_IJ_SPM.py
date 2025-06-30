@@ -1,34 +1,4 @@
 # FUNCTION - COMPUTE I AND J GEOMETRIC INTEGRALS FOR SOURCE PANEL METHOD
-# Written by: JoshTheEngineer
-# YouTube   : www.youtube.com/joshtheengineer
-# Website   : www.joshtheengineer.com
-# Started   : 02/03/19 - Transferred from MATLAB to Python
-#                      - Works as expected
-#           : 04/28/20 - Fixed E value error handling
-#
-# PURPOSE
-# - Compute the integral expression for constant strength source panels
-# - Source panel strengths are constant, but can change from panel to panel
-# - Geometric integral for panel-normal    : I(ij)
-# - Geometric integral for panel-tangential: J(ij)
-#
-# REFERENCES
-# - [1]: Normal Geometric Integral SPM, I(ij)
-#           Link: https://www.youtube.com/watch?v=76vPudNET6U
-# - [2]: Tangential Geometric Integral SPM, J(ij)
-#           Link: https://www.youtube.com/watch?v=JRHnOsueic8
-#
-# INPUTS
-# - XC  : X-coordinate of control points
-# - YC  : Y-coordinate of control points
-# - XB  : X-coordinate of boundary points
-# - YB  : Y-coordinate of boundary points
-# - phi : Angle between positive X-axis and interior of panel
-# - S   : Length of panel
-# 
-# OUTPUTS
-# - I   : Value of panel-normal integral (Eq. 3.163 in Anderson or Ref [1])
-# - J   : Value of panel-tangential integral (Eq. 3.165 in Anderson or Ref [2])
 
 import numpy as np
 import math as math

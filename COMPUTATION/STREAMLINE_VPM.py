@@ -1,35 +1,4 @@
 # FUNCTION - COMPUTE Nx AND Ny GEOMETRIC INTEGRALS FOR VORTEX PANEL METHOD
-# Written by: JoshTheEngineer
-# YouTube   : www.youtube.com/joshtheengineer
-# Website   : www.joshtheengineer.com
-# Started   : 01/23/19
-# Updated   : 01/23/19 - Started code in MATLAB
-#                      - Works as expected
-#           : 02/03/19 - Transferred to Python
-#                      - Works as expected
-#           : 04/28/20 - Fixed E value error handling
-#
-# PURPOSE
-# - Compute the integral expression for constant strength vortex panels
-# - Vortex panel strengths are constant, but can change from panel to panel
-# - Geometric integral for X-direction: Nx(pj)
-# - Geometric integral for Y-direction: Ny(pj)
-#
-# REFERENCES
-# - [1]: Streamline Geometric Integral VPM, Nx(pj) and Ny(pj)
-#           Link: https://www.youtube.com/watch?v=TBwBnW87hso
-#
-# INPUTS
-# - XP  : X-coordinate of computation point, P
-# - YP  : Y-coordinate of computation point, P
-# - XB  : X-coordinate of boundary points
-# - YB  : Y-coordinate of boundary points
-# - phi : Angle between positive X-axis and interior of panel
-# - S   : Length of panel
-# 
-# OUTPUTS
-# - Nx  : Value of X-direction geometric integral
-# - Ny  : Value of Y-direction geometric integral
 
 import numpy as np
 import math as math

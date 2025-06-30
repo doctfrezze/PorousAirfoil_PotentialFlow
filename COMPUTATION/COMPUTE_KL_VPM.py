@@ -1,37 +1,4 @@
 # FUNCTION - COMPUTE K AND L GEOMETRIC INTEGRALS FOR VORTEX PANEL METHOD
-# Written by: JoshTheEngineer
-# YouTube   : www.youtube.com/joshtheengineer
-# Website   : www.joshtheengineer.com
-# Started   : 01/23/19
-# Updated   : 01/23/19 - Started code in MATLAB
-#                      - Works as expected
-#           : 02/03/19 - Transferred to Python
-#                      - Works as expected
-#           : 04/28/20 - Fixed E value error handling
-#
-# PURPOSE
-# - Compute the integral expression for constant strength vortex panels
-# - Vortex panel strengths are constant, but can change from panel to panel
-# - Geometric integral for panel-normal    : K(ij)
-# - Geometric integral for panel-tangential: L(ij)
-#
-# REFERENCES
-# - [1]: Normal Geometric Integral VPM, K(ij)
-#           Link: https://www.youtube.com/watch?v=5lmIv2CUpoc
-# - [2]: Tangential Geometric Integral VPM, L(ij)
-#           Link: https://www.youtube.com/watch?v=IxWJzwIG_gY
-#
-# INPUTS
-# - XC  : X-coordinate of control points
-# - YC  : Y-coordinate of control points
-# - XB  : X-coordinate of boundary points
-# - YB  : Y-coordinate of boundary points
-# - phi : Angle between positive X-axis and interior of panel
-# - S   : Length of panel
-# 
-# OUTPUTS
-# - K   : Value of panel-normal integral (Ref [1])
-# - L   : Value of panel-tangential integral (Ref [2])
 
 import numpy as np
 import math as math
