@@ -5,19 +5,23 @@ from matplotlib import path
 
 from SPVP_Airfoil import SPVP
 from XFOIL import XFOIL_DATA
+from GEOMETRY import GEOMETRY
+from COMPUTATION.COMPUTE_LIFT_MOMENT import COMPUTE_LIFT_MOMENT
 
-
-NameAirfoil = "2412"
-numPan = 500
+#%% Parameters
+NameAirfoil = "0018"
+numPan = 60
 Vinf = 1
 AoA = 4
+AoAR = AoA*(np.pi/180) 
 
-
+#%% COMPUTATION AND XFOIL DATA
 XB,YB,XC,YC,S,delta,Cp,phi,lam,gamma,CL,CM = SPVP(NameAirfoil,numPan,Vinf,AoA,power=1)
 x_xfoil,cp_xfoil = XFOIL_DATA(NameAirfoil,4)
 
-
-plt.figure()
+#%% PLOT
+fig = plt.figure()
+fig.suptitle("NACA"+NameAirfoil)
 midIndS_xfoil = int(np.floor(len(cp_xfoil)/2))                                          # Airfoil middle index for XFOIL data
 plt.plot(x_xfoil[midIndS_xfoil:len(x_xfoil)], cp_xfoil[midIndS_xfoil:len(x_xfoil)],
          color='r',label='XFOIL Lower')
@@ -33,53 +37,51 @@ plt.plot(XC[0:midIndS],Cp[0:midIndS],                                       # Pl
 plt.gca().invert_yaxis()  # Cp plots ont souvent l'axe Y inversé
 plt.xlabel("x/c")
 plt.ylabel("Cp")
-plt.title("Coefficient de Pression à α = 4°")
+plt.title("Cp at α = 4°")
 plt.grid(True)
 plt.legend()
 
 
-#######################################################
+###############  COMPARISAON OF CL AND CM OVER A RANGE OF BETWEEN ANGL########################################
 
+#%% PARAMETERS
 # Chemin vers ton fichier
-filename = "XFOIL_DATA/2412_CL_CM.dat"
+filename = "XFOIL_DATA/"+NameAirfoil+"_CL_CM.dat"
 
+#%% XFOIL DATA LOADING
 # Ouvre le fichier pour voir combien de lignes d'en-tête il y a
 with open(filename, 'r') as f:
     for i, line in enumerate(f):
-        print(f"Ligne {i+1}: {line.strip()}")
         if line.strip().startswith('-----'):
             header_end = i + 1
             break
 
 # Charger les données après les lignes d'en-tête
 data = np.loadtxt(filename, skiprows=header_end)
-
-# Extraire colonnes :
-# typiquement :
-# Colonne 0 → Alpha
-# Colonne 1 → CL
-# Colonne 4 → CM
 alpha_xfoil = data[:, 0]
 cl_xfoil = data[:, 1]
 cm_xfoil = data[:, 4]
 
+
+#%% COMPUTATION OF CL AND CM WITH SPVP
 CL = np.zeros(21)
 CM = np.zeros(21)
 for i in range(0,21):
     print(i/len(CL)*100, "%")
-    XB,YB,XC,YC,S,delta,Cp,phi,lam,gamma,CL[i],CM[i] = SPVP(NameAirfoil,numPan,Vinf,alpha_xfoil[i],power=1)
+    XB,YB,XC,YC,S,delta,Cp,phi,lam,gamma,CL[i],CM[i] = SPVP(NameAirfoil,numPan,Vinf,alpha_xfoil[i],power=3)
 
 
 
-
+#%% PLOT
 # Tracer CL vs Alpha
-plt.figure(figsize=(8,4))
+fig2 = plt.figure(figsize=(8,4))
+fig2.suptitle("NACA"+NameAirfoil)
 plt.subplot(1, 2, 1)
 plt.plot(alpha_xfoil, cl_xfoil, marker='o', color='r',label ="XFOIL")
 plt.plot(alpha_xfoil, CL, marker='o', color='b',label ="SPVP")
 plt.xlabel('Alpha [deg]')
 plt.ylabel('CL')
-plt.title('CL vs Alpha')
+plt.title('CL vs Alpha ('+str(numPan)+' panels)')
 plt.legend()
 plt.grid(True)
 
@@ -89,7 +91,7 @@ plt.plot(alpha_xfoil, cm_xfoil, marker='s', color='r',label ="XFOIL")
 plt.plot(alpha_xfoil, CM, marker='s', color='b',label ="SPVP")
 plt.xlabel('Alpha [deg]')
 plt.ylabel('CM')
-plt.title('CM vs Alpha')
+plt.title('CM vs Alpha ('+str(numPan)+' panels)')
 plt.grid(True)
 plt.legend()
 

@@ -2,13 +2,11 @@
 
 import numpy as np
 import math as math
-def COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC):
+def COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC,YC):
     # Compute normal and axial force coefficients
-    CN = -Cp*S*np.sin(beta)                                                         # Normal force coefficient []
-    CA = -Cp*S*np.cos(beta)                                                         # Axial force coefficient []
-
-    # Compute lift and moment coefficients
-    CL = sum(CN*np.cos(AoAR)) - sum(CA*np.sin(AoAR))                                # Decompose axial and normal to lift coefficient []
-    CM = sum(Cp*(XC-0.25)*S*np.cos(phi))                                            # Moment coefficient []
+    CL = sum(-Cp*S*np.sin(beta))                                                         # Normal force coefficient []
+    X = XC*np.cos(AoAR) + YC*np.sin(AoAR)
+    Y = YC*np.cos(AoAR) - XC*np.sin(AoAR)
+    CM = sum(Cp*(X-0.25)*S*np.cos(phi) + Cp*Y*S*np.sin(phi))                                            # Moment coefficient []
 
     return CL,CM

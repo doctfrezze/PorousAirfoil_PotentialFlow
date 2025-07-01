@@ -39,7 +39,7 @@ def SPVP(NameAirfoil,numPan,Vinf,AoA,power=1):
     Vt, Cp = COMPUTE_Vt_Cp(numPan,Vinf,beta,lam,gamma,J,L)
 
     # COMPUTE LIFT AND MOMENT COEFFICIENTS
-    CL,CM = COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC)
+    CL,CM = COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC,YC)
     return XB,YB,XC,YC,S,delta,Cp,phi,lam,gamma,CL,CM
 
 
