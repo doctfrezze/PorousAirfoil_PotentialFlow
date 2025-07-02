@@ -9,16 +9,32 @@ from GEOMETRY import GEOMETRY
 from COMPUTATION.COMPUTE_LIFT_MOMENT import COMPUTE_LIFT_MOMENT
 
 #%% Parameters
-NameAirfoil = "0018"
-numPan = 60
+NameAirfoil = "2412"
+numPan = 300
 Vinf = 1
-AoA = 4
+AoA =4
 AoAR = AoA*(np.pi/180) 
 
 #%% COMPUTATION AND XFOIL DATA
 XB,YB,XC,YC,S,delta,Cp,phi,lam,gamma,CL,CM = SPVP(NameAirfoil,numPan,Vinf,AoA,power=1)
+print(CL)
+print(CM)
 x_xfoil,cp_xfoil = XFOIL_DATA(NameAirfoil,4)
 
+t = 0.24
+c=1
+y_xfoil = 5 * t * c * (0.2969 * np.sqrt(x_xfoil / c) - 0.1260 * (x_xfoil / c) - 0.3516 * (x_xfoil / c)**2 
+                      + 0.2843 * (x_xfoil / c)**3 - 0.1015 * (x_xfoil / c)**4)
+
+XC_xfoil,YC_xfoil,S_xfoil,phi_xfoil,delta_xfoil,beta_xfoil = GEOMETRY(len(x_xfoil)-1,x_xfoil,y_xfoil,AoAR)
+
+
+CL_xfoil,CM_xfoil = COMPUTE_LIFT_MOMENT(cp_xfoil[:-1],S_xfoil,beta_xfoil,phi_xfoil,AoAR,x_xfoil[:-1],y_xfoil[:-1])
+
+print("CL = ",CL)
+print("CM = ",CM)
+print("CL_xfoil = ",CL_xfoil)
+print("CM_xfoil = ",CM_xfoil)
 #%% PLOT
 fig = plt.figure()
 fig.suptitle("NACA"+NameAirfoil)
