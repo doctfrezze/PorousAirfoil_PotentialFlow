@@ -15,10 +15,10 @@ from NACA import GENERATE_NACA4
 from GEOMETRY import GEOMETRY
 from PANEL_DIRECTIONS import PANEL_DIRECTIONS
 
-def SPVP(NameAirfoil,numPan,Vinf,AoA,power=1):
+def SPVP(XB, YB,numPan,Vinf,AoA,rhoinf=1,Delta_Cp=0,Rs=1,a=1,n=1,pore_entry=[],pore_out=[]):
     # Convert angle of attack to radians
     AoAR = AoA*(np.pi/180)                                                          # Angle of attack [rad]
-    XB, YB = GENERATE_NACA4(NameAirfoil,n=int(numPan/2+1),power=power)
+    
 
     # CHECK PANEL DIRECTIONS - FLIP IF NECESSARY
     PANEL_DIRECTIONS(numPan,XB,YB)
@@ -31,7 +31,7 @@ def SPVP(NameAirfoil,numPan,Vinf,AoA,power=1):
     K, L = COMPUTE_KL_VPM(XC,YC,XB,YB,phi,S)                                        # Call COMPUTE_KL_VPM function (Refs [6] and [7])
 
     A = COMPUTE_A_SPVP(numPan,I,K,J,L)
-    b = COMPUTE_b_SPVP(numPan,Vinf,beta)
+    b = COMPUTE_b_SPVP(numPan,Vinf,beta,rhoinf,Delta_Cp,Rs,a,n,pore_entry,pore_out)
 
     lam, gamma = COMPUTE_SOLUTION_SPVP(A,b)
 
@@ -40,25 +40,26 @@ def SPVP(NameAirfoil,numPan,Vinf,AoA,power=1):
 
     # COMPUTE LIFT AND MOMENT COEFFICIENTS
     CL,CM = COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC,YC)
-    return XB,YB,XC,YC,S,delta,Cp,phi,lam,gamma,CL,CM
+    return XC,YC,S,delta,Cp,phi,lam,gamma,CL,CM
 
 
 if __name__ == '__main__':
     # User-defined knowns
     Vinf = 1                                                                        # Freestream velocity [] (just leave this at 1)
-    AoA  = 4                                                                        # Angle of attack [deg]
+    AoA  = 0                                                                        # Angle of attack [deg]
     # Plotting flags
     flagPlot = [0,      # Airfoil with panel normal vectors
                 0,      # Geometry boundary pts, control pts, first panel, second panel
                 1,      # Cp vectors at airfoil surface panels
                 1,      # Pressure coefficient comparison (XFOIL vs. VPM)
-                0,      # Airfoil streamlines
-                0]      # Pressure coefficient contour
+                1,      # Airfoil streamlines
+                1]      # Pressure coefficient contour
 
     # AirFoil panels
     numPan = 100
-    NameAirfoil = "2412"
-    XB,YB,XC,YC,S,delta,Cp,phi,lam,gamma,CL,CM = SPVP(NameAirfoil,numPan,Vinf,AoA,power=3)
+    NameAirfoil = "0018"
+    XB, YB = GENERATE_NACA4(NameAirfoil,n=int(numPan/2+1),power=3)
+    XC,YC,S,delta,Cp,phi,lam,gamma,CL,CM = SPVP(XB, YB,numPan,Vinf,AoA)
     # %% PLOT
     PLOT(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma)
 

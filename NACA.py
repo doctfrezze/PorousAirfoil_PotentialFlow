@@ -28,3 +28,5 @@ def GENERATE_NACA4(NameAirfoil, c=1.0, n=100, power=1.0):
         yl = yc - yt * np.cos(theta)
     
     return np.append(xl[::-1], xu[1:]), np.append(yl[::-1], yu[1:])
+
+GENERATE_NACA4('0018')

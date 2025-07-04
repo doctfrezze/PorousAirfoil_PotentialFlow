@@ -9,8 +9,8 @@ from GEOMETRY import GEOMETRY
 from COMPUTATION.COMPUTE_LIFT_MOMENT import COMPUTE_LIFT_MOMENT
 
 #%% Parameters
-NameAirfoil = "2412"
-numPan = 300
+NameAirfoil = "0018"
+numPan = 100
 Vinf = 1
 AoA =4
 AoAR = AoA*(np.pi/180) 
