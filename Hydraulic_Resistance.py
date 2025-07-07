@@ -7,13 +7,16 @@ def Hydraulic_Resistance(mu,L,type='circular',geometry=[1]):
     # if type = 'any' ==> geometry = [hydraulic diameter]
     if type == 'circular' and len(geometry) == 1:
         Dh = 2*geometry[0]
+        R = 128*mu*L/np.pi/Dh**4
     elif type == 'rectangle' and len(geometry) == 2:
-        Dh = 4*geometry[0]*geometry[1]/(2*geometry[0]+2*geometry[1])
+        w=geometry[0]
+        h=geometry[1]
+        R = 12*mu*L/((w*h**3)*(1-0.63*(h/w)))
     elif type == 'any' and len(geometry) == 1:
         Dh = geometry[0]
+        R = 128*mu*L/np.pi/Dh**4
     else:
         print('Error: geometry is not defined correctly')
-    R = 128*mu*L/np.pi/Dh**4
     print('Resistance = ',R)
     return R
     

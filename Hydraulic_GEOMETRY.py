@@ -5,41 +5,54 @@ import matplotlib.pyplot as plt
 
 from GEOMETRY import GEOMETRY
 
-def Hydraulic_GEOMETRY(XC,YC,delta,a,centre_point):
+def Hydraulic_GEOMETRY(XC,YC,omega,a,centre_point):
     # Define the list of control points that are in the pores
     control_points_in_pores = []
-    a_slope = math.tan(delta[centre_point])
-    b_low = YC[centre_point]- math.tan(delta[centre_point])*(XC[centre_point]+a/2/math.sin(delta[centre_point]))
-    b_high = YC[centre_point] - math.tan(delta[centre_point])*(XC[centre_point]-a/2/math.sin(delta[centre_point]))
+    a_slope = math.tan(omega)
+    if omega == 0:
+        b_low = YC[centre_point] - a/2
+        b_high = YC[centre_point] + a/2
+    else:
+        b_low = YC[centre_point]- math.tan(omega)*(XC[centre_point]+a/2/math.sin(omega))
+        b_high = YC[centre_point] - math.tan(omega)*(XC[centre_point]-a/2/math.sin(omega))
     if b_low > b_high:
         b_low, b_high = b_high, b_low
+    plot_line(a_slope, b_low, x_min=0, x_max=1)
+    plot_line(a_slope, b_high, x_min=0, x_max=1)
     for i in range(len(XC)):
         if YC[i] >= a_slope*XC[i]+b_low and YC[i] <= a_slope*XC[i]+b_high:
             control_points_in_pores.append(i)
-    return filter(control_points_in_pores,centre_point)
+    return filter_circulaire(control_points_in_pores,centre_point,len(XC))
 
-def filter(liste, A):
+def filter_circulaire(liste, A,numPan):
     """
-    Retourne tous les éléments connectés à A via des pas de +1 ou -1 dans la liste.
+    Retourne tous les éléments connectés à A via des pas de +1 ou -1 circulaires dans la liste.
     """
     liste_set = set(liste)
     visited = set()
     à_visiter = [A]
 
+    min_val = 0
+    max_val = numPan-1
+
     while à_visiter:
         courant = à_visiter.pop()
         if courant in liste_set and courant not in visited:
             visited.add(courant)
-            if courant + 1 in liste_set:
-                à_visiter.append(courant + 1)
-            if courant - 1 in liste_set:
-                à_visiter.append(courant - 1)
+            
+            voisin_plus = courant + 1 if courant < max_val else min_val
+            voisin_moins = courant - 1 if courant > min_val else max_val
+
+            if voisin_plus in liste_set:
+                à_visiter.append(voisin_plus)
+            if voisin_moins in liste_set:
+                à_visiter.append(voisin_moins)
     
     return sorted(list(visited), key=liste.index)
 
 
 
-def Refine_GEOMETRY(XB,NameAirfoil, entry_point, out_point,AoAR,n_refinement=5):
+def Refine_GEOMETRY(XB,NameAirfoil, entry_point, out_point,AoAR,n_refinement=10):
     m = int(NameAirfoil[0])*0.01
     p = int(NameAirfoil[1])*0.1
     t = int(NameAirfoil[2:4])*0.01
@@ -47,21 +60,21 @@ def Refine_GEOMETRY(XB,NameAirfoil, entry_point, out_point,AoAR,n_refinement=5):
     if entry_point <= 0 or entry_point >= len(XB)-1:
         raise ValueError("i doit être un indice interne (1 <= i <= len(X)-2)")
 
-    x_prev_in = XB[entry_point]
-    x_curr_in = XB[entry_point+1]
+    x_prev_in = XB[entry_point-1]
+    x_curr_in = XB[entry_point+2]
 
-    x_prev_out = XB[out_point]
-    x_curr_out = XB[out_point+1]
+    x_prev_out = XB[out_point-1]
+    x_curr_out = XB[out_point+2]
 
     # Points de transition
     trans_in = np.linspace(x_prev_in, x_curr_in, n_refinement + 2)[1:-1]
     trans_out = np.linspace(x_prev_out, x_curr_out, n_refinement + 2)[1:-1]
     if entry_point < out_point:
-        XB = np.concatenate([XB[:entry_point+1],trans_in, XB[entry_point+1:out_point+1],trans_out,XB[out_point+1:]])
+        XB = np.concatenate([XB[:entry_point],trans_in, XB[entry_point+2:out_point],trans_out,XB[out_point+2:]])
         entry_point += (n_refinement-1)/2
         out_point +=n_refinement+(n_refinement-1)/2
     elif out_point < entry_point:
-        XB = np.concatenate([XB[:out_point+1],trans_out,XB[out_point+1:entry_point+1],trans_in,XB[entry_point+1:]])
+        XB = np.concatenate([XB[:out_point],trans_out,XB[out_point+2:entry_point],trans_in,XB[entry_point+2:]])
         out_point += (n_refinement-1)/2
         entry_point +=n_refinement+(n_refinement-1)/2
     
