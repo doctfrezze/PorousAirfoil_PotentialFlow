@@ -198,6 +198,20 @@ def GRID_CALCULATION(XB,YB,phi,S,Vinf,AoAR,lam,gamma):
     CpXY = 1 - (Vxy/Vinf)**2                                                    # Pressure coefficient []
     return XX,YY,XYsl,Vx,Vy,xVals,yVals,CpXY
 
+def PLOT_AIRFOIL(XB,YB,pore_entry,pore_exit,alone):
+    fig = plt.figure(1)                                                         # Create the figure
+    plt.cla()                                                                   # Clear the axes
+    XB_up = np.concatenate([XB[:pore_exit[0]],XB[pore_entry[-1]:]])
+    YB_up = np.concatenate([YB[:pore_exit[0]],YB[pore_entry[-1]:]])
+
+    XB_down = np.concatenate([XB[pore_exit[-1]:pore_entry[0]]])
+    YB_down = np.concatenate([YB[pore_exit[-1]:pore_entry[0]]])
+    plt.fill(XB_up,YB_up,'k')                                                         # Plot the airfoil
+    plt.fill(XB_down,YB_down,'k')
+    plt.axis('equal')                                                           # Set axes equal
+    if alone:                                                          # If alone is 1
+        plt.show()
+
 def PLOT_ALL(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma):
     AoAR = AoA*(np.pi/180)  
     if (flagPlot[4] == 1 or flagPlot[5] == 1):                                      # If we are plotting streamlines or pressure coefficient contours
