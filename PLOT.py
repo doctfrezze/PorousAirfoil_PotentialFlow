@@ -10,7 +10,7 @@ from COMPUTATION.STREAMLINE_VPM import STREAMLINE_VPM
 
 
 def PLOT_NORMAL_VECTOR(XB,YB,numPan,XC,YC,S,delta,alone=1):
-    fig = plt.figure(1)                                                         # Create the figure
+    fig = plt.figure()                                                         # Create the figure
     plt.cla()                                                                   # Clear the axes
     plt.fill(XB,YB,'k')                                                         # Plot the airfoil
     X = np.zeros(2)                                                             # Initialize 'X'
@@ -35,7 +35,7 @@ def PLOT_NORMAL_VECTOR(XB,YB,numPan,XC,YC,S,delta,alone=1):
         plt.show()
 
 def PLOT_GEOMETRY(XB,YB,XC,YC,alone=1):
-    fig = plt.figure(2)                                                         # Create figure
+    fig = plt.figure()                                                         # Create figure
     plt.cla()                                                                   # Get ready for plotting
     plt.plot(XB,YB,'k-')                                                        # Plot airfoil panels
     plt.plot([XB[0], XB[1]],[YB[0], YB[1]],'b-',label='First Panel')            # Plot first panel
@@ -50,7 +50,7 @@ def PLOT_GEOMETRY(XB,YB,XC,YC,alone=1):
         plt.show()
 
 def PLOT_CP_AIRFOIL(Cp,XC,YC,delta,XB,YB,alone=1):
-    fig = plt.figure(3)                                                         # Create figure
+    fig = plt.figure()                                                         # Create figure
     plt.cla()                                                                   # Get ready for plotting
     Cps = np.absolute(Cp*0.15)                                                  # Scale and make positive all Cp values
     X = np.zeros(2)                                                             # Initialize X values
@@ -73,7 +73,7 @@ def PLOT_CP_AIRFOIL(Cp,XC,YC,delta,XB,YB,alone=1):
         plt.show()
 
 def PLOT_CP(XB,XC,Cp,alone=1):
-    fig = plt.figure(4)                                                         # Create figure
+    fig = plt.figure()                                                         # Create figure
     plt.cla()                                                                   # Get ready for plotting
     for i in range(len(XB)):
         if XB[i+1]>XB[i]:
@@ -94,21 +94,23 @@ def PLOT_CP(XB,XC,Cp,alone=1):
         plt.show()
 
 def PLOT_CP_COMPARISON(XB,XC,Cp1,Cp2,label1,label2,alone=1):
-    fig = plt.figure(4)                                                         # Create figure
+    fig = plt.figure()                                                         # Create figure
     plt.cla()                                                                   # Get ready for plotting
     for i in range(len(XB)):
         if XB[i+1]>XB[i]:
             midIndS = i
             break
-    plt.plot(XC[midIndS+1:len(XC)],Cp1[midIndS+1:len(XC)],                       # Plot Cp for upper surface of airfoil from panel method
+    plt.plot(XC[midIndS+1:len(XC)],Cp1[midIndS+1:len(XC)],                       # Plot Cp for upper surface of porous airfoil
                 color='orange',label=label1+' Upper')
-    plt.plot(XC[0:midIndS+1],Cp1[0:midIndS+1],                                   # Plot Cp for lower surface of airfoil from panel method
+    plt.plot(XC[0:midIndS+1],Cp1[0:midIndS+1],                                   # Plot Cp for lower surface of porous airfoil
                 color = 'g',label=label1+' Lower')
-    plt.plot(XC[midIndS+1:len(XC)],Cp2[midIndS+1:len(XC)],                       # Plot Cp for upper surface of airfoil from panel method
+    plt.plot(XC[midIndS+1:len(XC)],Cp2[midIndS+1:len(XC)],                       # Plot Cp for upper surface of solid airfoil
                 color='b',label=label2+' Upper')
-    plt.plot(XC[0:midIndS+1],Cp2[0:midIndS+1],                                   # Plot Cp for lower surface of airfoil from panel method
+    plt.plot(XC[0:midIndS+1],Cp2[0:midIndS+1],                                   # Plot Cp for lower surface of solid airfoil
                 color='r',label=label2+' Lower')
-    plt.xlim(0,1)                                                               # Set X-limits
+    plt.xlim(-0.01,1.01)                                                              # Set X-limits
+    plt.ylim(-1.6,1.5)
+    plt.grid(True)
     plt.xlabel('X Coordinate')                                                  # Set X-label
     plt.ylabel('Cp')                                                            # Set Y-label
     plt.title('Pressure Coefficient')                                           # Set title
@@ -119,7 +121,7 @@ def PLOT_CP_COMPARISON(XB,XC,Cp1,Cp2,label1,label2,alone=1):
         plt.show()
 
 def PLOT_STREAMLINE(XX,YY,Vx,Vy,XYsl,XB,YB,xVals,yVals,alone=1):
-    fig = plt.figure(5)                                                         # Create figure
+    fig = plt.figure()                                                         # Create figure
     plt.cla()                                                                   # Get ready for plotting
     np.seterr(under="ignore")                                                   # Ignore underflow error message
     plt.streamplot(XX,YY,Vx,Vy, linewidth=0.5, density=40, color='r',           # Plot streamlines
@@ -135,7 +137,7 @@ def PLOT_STREAMLINE(XX,YY,Vx,Vy,XYsl,XB,YB,xVals,yVals,alone=1):
         plt.show()
 
 def PLOT_PRESSURE(XX,YY,CpXY,XB,YB,xVals,yVals,alone=1):
-    fig = plt.figure(6)                                                         # Create figure
+    fig = plt.figure()                                                         # Create figure
     plt.cla()                                                                   # Get ready for plotting
     plt.contourf(XX,YY,CpXY,500,cmap='jet')                                     # Plot contour
     plt.fill(XB,YB,'k')                                                         # Plot airfoil as black polygon
@@ -198,20 +200,95 @@ def GRID_CALCULATION(XB,YB,phi,S,Vinf,AoAR,lam,gamma):
     CpXY = 1 - (Vxy/Vinf)**2                                                    # Pressure coefficient []
     return XX,YY,XYsl,Vx,Vy,xVals,yVals,CpXY
 
-def PLOT_AIRFOIL(XB,YB,pore_entry,pore_exit,alone):
-    fig = plt.figure(1)                                                         # Create the figure
-    plt.cla()                                                                   # Clear the axes
-    XB_up = np.concatenate([XB[:pore_exit[0]],XB[pore_entry[-1]:]])
-    YB_up = np.concatenate([YB[:pore_exit[0]],YB[pore_entry[-1]:]])
+def PLOT_AIRFOIL(XB, YB, low_point, high_point, alone=True):
+    
+    """
+    Trace l'airfoil en remplissant la partie supérieure et inférieure.
 
-    XB_down = np.concatenate([XB[pore_exit[-1]:pore_entry[0]]])
-    YB_down = np.concatenate([YB[pore_exit[-1]:pore_entry[0]]])
-    plt.fill(XB_up,YB_up,'k')                                                         # Plot the airfoil
-    plt.fill(XB_down,YB_down,'k')
-    plt.axis('equal')                                                           # Set axes equal
+    XB, YB : listes des coordonnées des points de contour.
+    low_point : indices des points de la partie inférieure.
+    high_point : indices des points de la partie supérieure.
+    alone : si True, crée une nouvelle figure ; sinon, ajoute au plot existant.
+    """
+    if alone:
+        plt.figure(figsize=(6, 3))
+
+    # Coordonnées partie inférieure
+    XB_low = [XB[i] for i in low_point]
+    YB_low = [YB[i] for i in low_point]
+
+    # Coordonnées partie supérieure
+    XB_high = [XB[i] for i in high_point]
+    YB_high = [YB[i] for i in high_point]
+
+    # Remplissage avec plt.fill
+    plt.fill(XB_high, YB_high, color='skyblue', label='Succion side')
+    plt.fill(XB_low, YB_low, color='lightcoral', label='Pressure side')
+
+    plt.axis('equal')
+    plt.legend()
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.grid(True)
+
+    if alone:
+        plt.show()
+
+def PLOT_CP_PRESSURE_SIDE(XC,YC, Cp_extern, Cp_intern, low_point, X_intern, alone = True):
+    fig = plt.figure()                                                         # Create figure
+    plt.cla()                                                                   # Get ready for plotting
+
+    XC_low = np.array([XC[i] for i in low_point])
+    YC_low = np.array([YC[i] for i in low_point])
+
+    Cp_low = np.array([Cp_extern[i] for i in low_point])
+    Cp_extern = np.array(np.array)
+    plt.plot(XC_low,Cp_low,color = 'red',label = "Pressure Side")
+    plt.plot(X_intern,Cp_intern, color = 'black', label = "Lower Pore Wall")
+
+    plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low>Cp_intern), interpolate=True, color = 'green', alpha=0.5)
+    plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low<=Cp_intern), interpolate=True, color = 'red', alpha=0.5)
+    plt.xlim(-0.01,1.01)
+    plt.ylim(-1.5,1.5)                                                               # Set X-limits
+    plt.xlabel('X Coordinate')                                                  # Set X-label
+    plt.ylabel('Cp')                                                            # Set Y-label
+    plt.title('Pressure Coefficient')                                           # Set title
+                                                                        # Display plot
+    plt.legend()                                                                # Display legend
+    plt.grid(True)
+    plt.gca().invert_yaxis()                                                    # Invert Cp (Y) axis
     if alone:                                                          # If alone is 1
         plt.show()
 
+def PLOT_CP_SUCCION_SIDE(XC,YC, Cp_extern, Cp_intern, high_point, X_intern, alone = True):
+    fig = plt.figure()                                                         # Create figure
+    plt.cla()                                                                   # Get ready for plotting
+
+    XC_low = np.array([XC[i] for i in high_point])
+    YC_low = np.array([YC[i] for i in high_point])
+
+    Cp_low = np.array([Cp_extern[i] for i in high_point])
+    Cp_extern = np.array(np.array)
+    plt.plot(XC_low,Cp_low,color = 'black',label = "Succion Side")
+    plt.plot(X_intern,Cp_intern, color = 'red', label = "Higher Pore Wall")
+
+    plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low>Cp_intern), interpolate=True, color = 'red', alpha=0.5)
+    plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low<=Cp_intern), interpolate=True, color = 'green', alpha=0.5)
+    plt.xlim(-0.01,1.01)
+    plt.ylim(-1.6,1.5)                                                               # Set X-limits
+    plt.xlabel('X Coordinate')                                                  # Set X-label
+    plt.ylabel('Cp')                                                            # Set Y-label
+    plt.title('Pressure Coefficient')                                           # Set title
+                                                                        # Display plot
+    plt.legend()                                                                # Display legend
+    plt.grid(True)
+    plt.gca().invert_yaxis()                                                    # Invert Cp (Y) axis
+    if alone:                                                          # If alone is 1
+        plt.show()
+
+
+
+    
 def PLOT_ALL(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma):
     AoAR = AoA*(np.pi/180)  
     if (flagPlot[4] == 1 or flagPlot[5] == 1):                                      # If we are plotting streamlines or pressure coefficient contours

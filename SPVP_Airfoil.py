@@ -15,7 +15,7 @@ from NACA import GENERATE_NACA4
 from GEOMETRY import GEOMETRY
 from PANEL_DIRECTIONS import PANEL_DIRECTIONS
 
-def SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics={},is_porous = 1,Delta_Cp=0):
+def SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics={},is_porous = 1,Delta_Cp=0,low_point = [],high_point = []):
     #%%Unpack maro variables
     AoAR = Fluid_characteristics['AoAR']                                                          # Angle of attack [rad]
     XB = Airfoil_geometry['XB']
@@ -38,8 +38,10 @@ def SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics={},is_porou
         pore_out = Pore_characteristics['pore_exit']
         omega_in = Pore_characteristics['omega_in']
         omega_out = Pore_characteristics['omega_out']
+        Dh = Pore_characteristics['Dh']
+        mu = Fluid_characteristics['mu']
     else:
-        rhoinf = 0
+        rhoinf = 1
         Vinf = 1
         Rs = 1
         a = 1
@@ -48,6 +50,8 @@ def SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics={},is_porou
         pore_out = []
         omega_in = 0
         omega_out = 0
+        Dh = 0
+        mu = 1
 
     #%% CHECK PANEL DIRECTIONS - FLIP IF NECESSARY
     PANEL_DIRECTIONS(numPan,XB,YB)
@@ -57,20 +61,23 @@ def SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics={},is_porou
     K, L = COMPUTE_KL_VPM(XC,YC,XB,YB,phi,S)                                        # Call COMPUTE_KL_VPM function (Refs [6] and [7])
 
     A = COMPUTE_A_SPVP(numPan,I,K,J,L)
-    b = COMPUTE_b_SPVP(numPan,Vinf,beta,rhoinf,Delta_Cp,Rs,a,n,pore_entry,pore_out,omega_in,omega_out,delta)
+    b = COMPUTE_b_SPVP(Airfoil_geometry,Fluid_characteristics,Delta_Cp,Pore_characteristics,is_porous)
     lam, gamma = COMPUTE_SOLUTION_SPVP(A,b)
 
     #%% COMPUTE PANEL VELOCITIES AND PRESSURE COEFFICIENTS
-    Vt, Cp = COMPUTE_Vt_Cp(numPan,Vinf,beta,lam,gamma,J,L,rhoinf,Delta_Cp,Rs,a,n,pore_entry,pore_out,omega_in,omega_out,b,delta,XC)
+    Vt, Cp = COMPUTE_Vt_Cp(Airfoil_geometry,Fluid_characteristics,Delta_Cp,gamma,lam,b,J,L,Pore_characteristics,is_porous = is_porous)
 
     #%% COMPUTE LIFT AND MOMENT COEFFICIENTS
-    CL,CM = COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC,YC)
+    CL,CM = COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC,YC,low_point=low_point,high_point=high_point)
     return Cp,lam,gamma,CL,CM
 
 
 if __name__ == '__main__':
     #%% User-defined knowns
     Vinf = 1                                                                        # Freestream velocity [] (just leave this at 1)
+    rhoinf = 1
+    Re = 1000
+    mu = Vinf*rhoinf/Re
     AoA  = 4                                                                        # Angle of attack [deg]
     AoAR = np.pi*AoA/180
     
@@ -94,8 +101,10 @@ if __name__ == '__main__':
     #%% Macro Variables
     Fluid_characteristics = {
         'Vinf' : Vinf,
+        'rhoinf' : rhoinf,
         'AoA' : AoA,
-        'AoAR' : AoAR
+        'AoAR' : AoAR,
+        'mu' : mu
     }
 
     Airfoil_geometry = {
@@ -113,7 +122,7 @@ if __name__ == '__main__':
     }
 
     #%% SPVP CALCULATION
-    XC,YC,S,delta,Cp,phi,lam,gamma,CL,CM = SPVP(Fluid_characteristics,Airfoil_geometry,is_porous=0)
+    Cp,lam,gamma,CL,CM = SPVP(Fluid_characteristics,Airfoil_geometry,is_porous=0)
 
 
     # %% PLOT

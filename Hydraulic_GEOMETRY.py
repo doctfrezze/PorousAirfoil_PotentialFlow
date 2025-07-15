@@ -17,8 +17,6 @@ def Hydraulic_GEOMETRY(XC,YC,omega,a,centre_point):
         b_high = YC[centre_point] - math.tan(omega)*(XC[centre_point]-a/2/math.sin(omega))
     if b_low > b_high:
         b_low, b_high = b_high, b_low
-    plot_line(a_slope, b_low, x_min=0, x_max=1)
-    plot_line(a_slope, b_high, x_min=0, x_max=1)
     for i in range(len(XC)):
         if YC[i] >= a_slope*XC[i]+b_low and YC[i] <= a_slope*XC[i]+b_high:
             control_points_in_pores.append(i)
@@ -50,6 +48,35 @@ def filter_circulaire(liste, A,numPan):
     
     return sorted(list(visited), key=liste.index)
 
+def pressure_succion_side(numPan,pore_entry,pore_exit):
+    if any(x>numPan/2 for x in pore_exit):
+        pore_exit_succion_side = [x for x in pore_exit if x > numPan/2]
+        if any(x<numPan/2 for x in pore_exit):
+            print('Case n1')
+            pore_exit_pressure_side = [x for x in pore_exit if x < numPan/2]
+            high_point1 = list(range(numPan))
+            low_point1 = list(range(numPan))
+            high_point = high_point1[max(pore_entry)+1:min(pore_exit_succion_side)]
+            low_point = low_point1[max(pore_exit_pressure_side)+1:min(pore_entry)]
+        else:
+            print('Case n2')
+            high_point1 = list(range(numPan))
+            low_point1 = list(range(numPan))
+            high_point = high_point1[max(pore_entry)+1:min(pore_exit)]
+            low_point = low_point1[0:min(pore_entry)]
+            if (max(pore_exit)<numPan-1):
+                low_point.extend(low_point1[max(pore_exit)+1:numPan])
+    else:
+        print('Case n3')
+        pore_exit_pressure_side = [x for x in pore_exit if x < numPan/2]
+        high_point1 = list(range(numPan))
+        low_point1 = list(range(numPan))
+        high_point = high_point1[max(pore_entry)+1:numPan]
+        low_point = low_point1[max(pore_exit_pressure_side)+1:min(pore_entry)]
+        if (min(pore_entry)>0):
+                high_point.extend(high_point1[0:min(pore_exit)])
+    
+    return low_point, high_point
 
 
 def Refine_GEOMETRY(XB,NameAirfoil, entry_point, out_point,AoAR,n_refinement=10):
@@ -107,6 +134,7 @@ def plot_line(a, b, x_min=0, x_max=1):
         """
         x = np.linspace(x_min, x_max, 100)  # 100 points entre x_min et x_max
         y = a * x + b  # équation de la droite
+        print('Im here')
 
         plt.plot(x, y, label=f'y = {a}x + {b}')
         plt.xlabel('x')

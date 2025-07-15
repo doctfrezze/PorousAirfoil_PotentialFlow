@@ -2,9 +2,15 @@
 
 import numpy as np
 import math as math
-def COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC,YC):
+def COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC,YC,low_point = [],high_point = []):
+    if low_point == [] and high_point == []:
+        CL = sum(-Cp*S*np.sin(beta))
+        CM = sum(Cp*(XC-0.25)*S*np.cos(phi) + Cp*YC*S*np.sin(phi))                           # Moment coefficient []
     # Compute normal and axial force coefficients
-    CL = sum(-Cp*S*np.sin(beta))                                                         # Normal force coefficient []
-    CM = sum(Cp*(XC-0.25)*S*np.cos(phi) + Cp*YC*S*np.sin(phi))                           # Moment coefficient []
+    else:
+        CL = sum(-Cp[i]*S[i]*np.sin(beta[i]) for i in low_point)                             # Normal force coefficient []
+        CL += sum(-Cp[i]*S[i]*np.sin(beta[i]) for i in high_point)
+        CM = sum(Cp[i]*(XC[i]-0.25)*S[i]*np.cos(phi[i]) + Cp[i]*YC[i]*S[i]*np.sin(phi[i]) for i in low_point)           
+        CM += sum(Cp[i]*(XC[i]-0.25)*S[i]*np.cos(phi[i]) + Cp[i]*YC[i]*S[i]*np.sin(phi[i]) for i in high_point)                 
 
     return CL,CM
