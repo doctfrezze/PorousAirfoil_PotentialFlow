@@ -110,9 +110,10 @@ def Refine_GEOMETRY(XB,NameAirfoil, entry_point, out_point,AoAR,n_refinement=10)
             lim = i
             break
     
-
+    #YB_DOWN = -np.sqrt((0.25-(XB[:lim+1]-0.5)*(XB[:lim+1]-0.5))/9)
     YB_DOWN = -5 * t * c * (0.2969 * np.sqrt(XB[:lim+1] / c) - 0.1260 * (XB[:lim+1] / c) - 0.3516 * (XB[:lim+1] / c)**2 
                       + 0.2843 * (XB[:lim+1] / c)**3 - 0.1015 * (XB[:lim+1] / c)**4)
+    #YB_UP = np.sqrt((0.25-(XB[lim+1:]-0.5)*(XB[lim+1:]-0.5))/9)
     YB_UP = 5 * t * c * (0.2969 * np.sqrt(XB[lim+1:] / c) - 0.1260 * (XB[lim+1:] / c) - 0.3516 * (XB[lim+1:] / c)**2 
                       + 0.2843 * (XB[lim+1:] / c)**3 - 0.1015 * (XB[lim+1:] / c)**4)
     YB = np.concatenate([YB_DOWN,YB_UP])

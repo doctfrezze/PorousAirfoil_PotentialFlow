@@ -90,7 +90,7 @@ if __name__ == '__main__':
                 1]      # Pressure coefficient contour
 
     # AirFoil panels
-    numPan = 100
+    numPan = 10
     NameAirfoil = "0018"
     power = 3
 

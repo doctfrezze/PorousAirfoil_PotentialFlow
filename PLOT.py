@@ -93,23 +93,37 @@ def PLOT_CP(XB,XC,Cp,alone=1):
     if alone:                                                          # If alone is 1
         plt.show()
 
-def PLOT_CP_COMPARISON(XB,XC,Cp1,Cp2,label1,label2,alone=1):
+def PLOT_CP_COMPARISON(XB,XC,Cp1,Cp2,pore_entry,pore_exit,label1,label2,alone=1):
     fig = plt.figure()                                                         # Create figure
     plt.cla()                                                                   # Get ready for plotting
+    XC_porous = []
+    Cp_porous = []
+    for i in range(len(XC)):
+        if i not in pore_entry and i not in pore_exit:
+            XC_porous.append(XC[i])
+            Cp_porous.append(Cp1[i])
     for i in range(len(XB)):
         if XB[i+1]>XB[i]:
             midIndS = i
             break
-    plt.plot(XC[midIndS+1:len(XC)],Cp1[midIndS+1:len(XC)],                       # Plot Cp for upper surface of porous airfoil
-                color='orange',label=label1+' Upper')
-    plt.plot(XC[0:midIndS+1],Cp1[0:midIndS+1],                                   # Plot Cp for lower surface of porous airfoil
-                color = 'g',label=label1+' Lower')
+    for i in range(len(XC_porous)-1):
+        if XC_porous[i+1]>XC_porous[i]:
+            midIndS_porous = i
+            break
+    """plt.plot(XC_porous[midIndS_porous+1:len(XC_porous)],Cp_porous[midIndS_porous+1:len(XC_porous)],                       # Plot Cp for upper surface of porous airfoil
+                color='r',label=label1+' Upper porous')
+    plt.plot(XC_porous[0:midIndS_porous+1],Cp_porous[0:midIndS_porous+1],                                   # Plot Cp for lower surface of porous airfoil
+                color = 'g',label=label1+' Lower porous')
     plt.plot(XC[midIndS+1:len(XC)],Cp2[midIndS+1:len(XC)],                       # Plot Cp for upper surface of solid airfoil
                 color='b',label=label2+' Upper')
     plt.plot(XC[0:midIndS+1],Cp2[0:midIndS+1],                                   # Plot Cp for lower surface of solid airfoil
-                color='r',label=label2+' Lower')
+                color='r',label=label2+' Lower')"""
+    plt.plot(XC_porous,Cp_porous,                       # Plot Cp for upper surface of porous airfoil
+                color='r',label=label1+' Porous')
+    plt.plot(XC,Cp2,                       # Plot Cp for upper surface of solid airfoil
+                color='black',label=label2+' Solid')
     plt.xlim(-0.01,1.01)                                                              # Set X-limits
-    plt.ylim(-1.6,1.5)
+    plt.ylim(-2,1.1)
     plt.grid(True)
     plt.xlabel('X Coordinate')                                                  # Set X-label
     plt.ylabel('Cp')                                                            # Set Y-label
@@ -249,7 +263,7 @@ def PLOT_CP_PRESSURE_SIDE(XC,YC, Cp_extern, Cp_intern, low_point, X_intern, alon
     plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low>Cp_intern), interpolate=True, color = 'green', alpha=0.5)
     plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low<=Cp_intern), interpolate=True, color = 'red', alpha=0.5)
     plt.xlim(-0.01,1.01)
-    plt.ylim(-1.5,1.5)                                                               # Set X-limits
+    plt.ylim(-2,1.1)                                                               # Set X-limits
     plt.xlabel('X Coordinate')                                                  # Set X-label
     plt.ylabel('Cp')                                                            # Set Y-label
     plt.title('Pressure Coefficient')                                           # Set title
@@ -275,7 +289,7 @@ def PLOT_CP_SUCCION_SIDE(XC,YC, Cp_extern, Cp_intern, high_point, X_intern, alon
     plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low>Cp_intern), interpolate=True, color = 'red', alpha=0.5)
     plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low<=Cp_intern), interpolate=True, color = 'green', alpha=0.5)
     plt.xlim(-0.01,1.01)
-    plt.ylim(-1.6,1.5)                                                               # Set X-limits
+    plt.ylim(-2,1.1)                                                               # Set X-limits
     plt.xlabel('X Coordinate')                                                  # Set X-label
     plt.ylabel('Cp')                                                            # Set Y-label
     plt.title('Pressure Coefficient')                                           # Set title

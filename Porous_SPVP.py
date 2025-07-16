@@ -76,7 +76,8 @@ if __name__ == "__main__":
     Rs,Dh = Hydraulic_Resistance(mu,L,type,pore_geometry)
     
     XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out = INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,out_point,entry_point,power=power,is_straight=1)
-
+    plt.plot(XB,YB)
+    plt.show()
 
     low_point,high_point = pressure_succion_side(numPan,pore_entry,pore_exit)
     
@@ -164,7 +165,7 @@ if __name__ == "__main__":
     print("CL Porous = ",CL)
     print("CL Solid = ",CL_Solid)
     PLOT_AIRFOIL(XB,YB,low_point,high_point,alone=0)
-    PLOT_CP_COMPARISON(XB,XC,Cp,Cp_Solid,label1='Porous',label2='Solid',alone = False)
+    PLOT_CP_COMPARISON(XB,XC,Cp,Cp_Solid,pore_entry,pore_exit,label1='Porous',label2='Solid',alone = False)
     PLOT_CP_PRESSURE_SIDE(XC,YC, Cp, Cp_inter_low, low_point, pore_intern_co_X_low, alone = False)
     PLOT_CP_SUCCION_SIDE(XC,YC, Cp, Cp_inter_high, high_point, pore_intern_co_X_high, alone = False)
     
