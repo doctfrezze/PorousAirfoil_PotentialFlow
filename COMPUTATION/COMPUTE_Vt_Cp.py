@@ -53,7 +53,7 @@ def COMPUTE_Vt_Cp(Airfoil_geometry,Fluid_characteristics,Delta_Cp,gamma,lam,b,J,
         Vt[i] = term1 + term2 + term3 + term4 + term5                                      # Compute tangential velocity on panel i
         Vn[i] = b[i] + Vinf*2*np.pi*np.cos(beta[i])
         V[i] =math.sqrt(Vt[i]**2+Vn[i]**2)
-        Cp[i] = 1-(V[i]/Vinf)**2                                                   # Compute pressure coefficient on panel i
+        Cp[i] = 1-(Vt[i]/Vinf)**2                                                   # Compute pressure coefficient on panel i
     """print('V_mean. = ',V_mean)
     print('V = ',V[pore_out[int(len(pore_out)/2)]])
     print('Vn = ',Vn[pore_out[int(len(pore_out)/2)]])

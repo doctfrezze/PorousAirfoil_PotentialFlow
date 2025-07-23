@@ -5,6 +5,26 @@ import matplotlib.pyplot as plt
 
 from GEOMETRY import GEOMETRY
 
+
+def Pore_Geometry(XB_pore,YB_pore):
+    numPan = len(XB_pore)-1
+    S = np.zeros(numPan)
+    phi = np.zeros(numPan)
+    XC_pore = np.zeros(numPan)
+    YC_pore = np.zeros(numPan)
+    j = 0
+
+    for i in range(numPan):                                                         # Loop over all panels
+        XC_pore[i] = 0.5*(XB_pore[i]+XB_pore[i+1])
+        YC_pore[i] = 0.5*(YB_pore[i]+YB_pore[i+1])
+        dx      = XB_pore[i+1]-XB_pore[i]                                                     # Change in X between boundary points
+        dy      = YB_pore[j+1]-YB_pore[j]                                                     # Change in Y between boundary points
+        S[j]    = (dx**2 + dy**2)**0.5                                              # Length of the panel
+        phi[j]  = math.atan2(dy,dx)                                                 # Angle of panel (positive X-axis to inside face)
+        if (phi[j] < 0):                                                            # Make all panel angles positive [rad]
+            phi[j] = phi[j] + 2*np.pi
+        j+=1
+    return S, phi, XC_pore, YC_pore
 def Hydraulic_GEOMETRY(XC,YC,omega,a,centre_point):
     # Define the list of control points that are in the pores
     control_points_in_pores = []

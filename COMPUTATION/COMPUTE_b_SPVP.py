@@ -35,7 +35,6 @@ def COMPUTE_b_SPVP(Airfoil_geometry,Fluid_characteristics,Delta_Cp,Pore_characte
             if Re_laminar >= 2000:                                                      #Turbulence 
                 Delta_P = Delta_Cp*0.5*rhoinf*Vinf**2
                 V_mean=2.868*((Delta_P**4)*(Dh**5)/((L**4)*mu*(rhoinf**3)))**(1/7)
-                print('V_mean = ',V_mean)
             if i in pore_entry:
                 b[i] = -Vinf*2*np.pi*np.cos(beta[i]) + V_mean#*np.cos(normal_vs_pore_in) # Compute RHS array
             elif i in pore_out:

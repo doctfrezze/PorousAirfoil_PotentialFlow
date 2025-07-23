@@ -4,6 +4,7 @@ import numpy as np
 import math as math
 import matplotlib.pyplot as plt
 from matplotlib import path
+from scipy.interpolate import interp1d
 
 from COMPUTATION.STREAMLINE_SPM import STREAMLINE_SPM
 from COMPUTATION.STREAMLINE_VPM import STREAMLINE_VPM
@@ -236,7 +237,7 @@ def PLOT_AIRFOIL(XB, YB, low_point, high_point, alone=True):
     YB_high = [YB[i] for i in high_point]
 
     # Remplissage avec plt.fill
-    plt.fill(XB_high, YB_high, color='skyblue', label='Succion side')
+    plt.fill(XB_high, YB_high, color='skyblue', label='Suction side')
     plt.fill(XB_low, YB_low, color='lightcoral', label='Pressure side')
 
     plt.axis('equal')
@@ -254,14 +255,22 @@ def PLOT_CP_PRESSURE_SIDE(XC,YC, Cp_extern, Cp_intern, low_point, X_intern, alon
 
     XC_low = np.array([XC[i] for i in low_point])
     YC_low = np.array([YC[i] for i in low_point])
-
     Cp_low = np.array([Cp_extern[i] for i in low_point])
     Cp_extern = np.array(np.array)
+
+    x_common = np.linspace(max(min(XC_low), min(X_intern)), min(max(XC_low), max(X_intern)), 200)
+    # Interpolation
+    f1 = interp1d(XC_low, Cp_low, kind='cubic')
+    f2 = interp1d(X_intern, Cp_intern, kind='cubic')
+
+    y1_interp = f1(x_common)
+    y2_interp = f2(x_common)
+
     plt.plot(XC_low,Cp_low,color = 'red',label = "Pressure Side")
     plt.plot(X_intern,Cp_intern, color = 'black', label = "Lower Pore Wall")
 
-    plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low>Cp_intern), interpolate=True, color = 'green', alpha=0.5)
-    plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low<=Cp_intern), interpolate=True, color = 'red', alpha=0.5)
+    plt.fill_between(x_common,y1_interp,y2_interp,where=(y1_interp>y2_interp), interpolate=False, color = 'green', alpha=0.5)
+    plt.fill_between(x_common,y1_interp,y2_interp,where=(y1_interp<=y2_interp), interpolate=False, color = 'red', alpha=0.5)
     plt.xlim(-0.01,1.01)
     plt.ylim(-2,1.1)                                                               # Set X-limits
     plt.xlabel('X Coordinate')                                                  # Set X-label
@@ -283,11 +292,20 @@ def PLOT_CP_SUCCION_SIDE(XC,YC, Cp_extern, Cp_intern, high_point, X_intern, alon
 
     Cp_low = np.array([Cp_extern[i] for i in high_point])
     Cp_extern = np.array(np.array)
-    plt.plot(XC_low,Cp_low,color = 'black',label = "Succion Side")
+
+    x_common = np.linspace(max(min(XC_low), min(X_intern)), min(max(XC_low), max(X_intern)), 200)
+    # Interpolation
+    f1 = interp1d(XC_low, Cp_low, kind='linear')
+    f2 = interp1d(X_intern, Cp_intern, kind='linear')
+
+    y1_interp = f1(x_common)
+    y2_interp = f2(x_common)
+
+    plt.plot(XC_low,Cp_low,color = 'black',label = "Suction Side")
     plt.plot(X_intern,Cp_intern, color = 'red', label = "Higher Pore Wall")
 
-    plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low>Cp_intern), interpolate=True, color = 'red', alpha=0.5)
-    plt.fill_between(XC_low,Cp_low,Cp_intern,where=(Cp_low<=Cp_intern), interpolate=True, color = 'green', alpha=0.5)
+    plt.fill_between(x_common,y1_interp,y2_interp,where=(y1_interp>y2_interp), interpolate=True, color = 'red', alpha=0.5)
+    plt.fill_between(x_common,y1_interp,y2_interp,where=(y1_interp<=y2_interp), interpolate=True, color = 'green', alpha=0.5)
     plt.xlim(-0.01,1.01)
     plt.ylim(-2,1.1)                                                               # Set X-limits
     plt.xlabel('X Coordinate')                                                  # Set X-label

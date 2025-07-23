@@ -68,8 +68,8 @@ def SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics={},is_porou
     Vt, Cp = COMPUTE_Vt_Cp(Airfoil_geometry,Fluid_characteristics,Delta_Cp,gamma,lam,b,J,L,Pore_characteristics,is_porous = is_porous)
 
     #%% COMPUTE LIFT AND MOMENT COEFFICIENTS
-    CL,CM = COMPUTE_LIFT_MOMENT(Cp,S,beta,phi,AoAR,XC,YC,low_point=low_point,high_point=high_point)
-    return Cp,lam,gamma,CL,CM
+    CL,CM,CD = COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_characteristics)
+    return Cp,lam,gamma,CL,CM,CD
 
 
 if __name__ == '__main__':
@@ -122,7 +122,7 @@ if __name__ == '__main__':
     }
 
     #%% SPVP CALCULATION
-    Cp,lam,gamma,CL,CM = SPVP(Fluid_characteristics,Airfoil_geometry,is_porous=0)
+    Cp,lam,gamma,CL,CM,CD = SPVP(Fluid_characteristics,Airfoil_geometry,is_porous=0)
 
 
     # %% PLOT
