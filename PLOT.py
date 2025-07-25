@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from matplotlib import path
 from scipy.interpolate import interp1d
 
-from COMPUTATION.STREAMLINE_SPM import STREAMLINE_SPM
-from COMPUTATION.STREAMLINE_VPM import STREAMLINE_VPM
+from COMPUTATION.COMPUTE import STREAMLINE_SPM
+from COMPUTATION.COMPUTE import STREAMLINE_VPM
 
 
 def PLOT_NORMAL_VECTOR(XB,YB,numPan,XC,YC,S,delta,alone=1):

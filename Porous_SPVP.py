@@ -4,17 +4,17 @@ import matplotlib.pyplot as plt
 
 
 from SPVP_Airfoil import SPVP
-from Hydraulic_Resistance import Hydraulic_Resistance
-from PLOT import PLOT_ALL, PLOT_CP_SUCCION_SIDE, PLOT_AIRFOIL, PLOT_CP_COMPARISON, PLOT_CP_PRESSURE_SIDE
-from Hydraulic_GEOMETRY import Hydraulic_GEOMETRY, Pore_Geometry, Refine_GEOMETRY, pressure_succion_side 
-from GEOMETRY import GEOMETRY
-from NACA import GENERATE_NACA4
-from COMPUTATION.COMPUTE_LIFT_MOMENT import COMPUTE_LIFT_MOMENT
+from COMPUTATION.Hydraulic_Resistance import Hydraulic_Resistance
+from PLOT import *
+from GEOMETRY.Hydraulic_GEOMETRY import *
+from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY
+from GEOMETRY.NACA import GENERATE_NACA4
+from COMPUTATION.COMPUTE import COMPUTE_LIFT_MOMENT
 
 def INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,out_point,entry_point,a,power=1,is_straight=1):
     AoAR = AoA*(np.pi/180)                                                          # Angle of attack [rad]
     XB, YB = GENERATE_NACA4(NameAirfoil,n=int(numPan/2+1),power=power)
-    XC,YC,S,phi,delta,beta = GEOMETRY(numPan,XB,YB,AoAR)
+    XC,YC,S,phi,delta,beta = GENERATE_GEOMETRY(numPan,XB,YB,AoAR)
     if is_straight:
         omega_in = math.atan2(YC[out_point]-YC[entry_point],XC[out_point]-XC[entry_point])
         omega_out = math.atan2(YC[out_point]-YC[entry_point],XC[out_point]-XC[entry_point])
@@ -61,9 +61,9 @@ def POROUS_SPVP(tol,max_iter,Pore_characteristics,Fluid_characteristics,Airfoil_
     #%% Loop with porous
     while err > tol and iter < max_iter: 
         Delta_Cp = Cp[entry_point]-Cp[out_point]
-        print("Delta_cp = ", Delta_Cp)
         Cp,lam,gamma,CL,CM,CD = SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics,is_porous = 1,Delta_Cp=Delta_Cp, low_point= low_point, high_point = high_point)
         err = abs((Delta_Cp-(Cp[entry_point]-Cp[out_point]))/Delta_Cp)
+        print("Delta_cp = ", Delta_Cp, '     err = ', err)
         iter += 1
         if iter == max_iter:
             print("Maximum number of iterations reached")
@@ -78,7 +78,7 @@ def POROUS_SPVP(tol,max_iter,Pore_characteristics,Fluid_characteristics,Airfoil_
     Cp_inter_high = np.zeros(len(pore_intern_co_XC_high))
     for i in range(len(pore_intern_co_XC_high)):
         Cp_inter_high[i] = Cp[entry_point] - Delta_Cp*(pore_intern_co_XC_high[i]-XB[entry_point])/(XB[out_point]-XB[entry_point])
-    CL,CM,CD = COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_characteristics,Cp_inter_low,Cp_inter_high,Delta_Cp,A)
+    CL,CM,CD = COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_characteristics,Cp_inter_low,Cp_inter_high,Delta_Cp,A,is_porous=1)
     return Cp, Cp_Solid, Cp_inter_low,Cp_inter_high, CL, CL_Solid, CD, CD_Solid,lam,gamma
 
 if __name__ == "__main__":
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     
     print('CL_Porous = ', CL)
     print('CL_solid = ', CL_Solid)
-    #PLOT_ALL(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma)
+    PLOT_ALL(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma)
 
 
 

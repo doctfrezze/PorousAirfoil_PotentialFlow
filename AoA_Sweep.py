@@ -2,10 +2,7 @@ import numpy as np
 import math as math
 import matplotlib.pyplot as plt
 
-from SPVP_Airfoil import SPVP
-from Hydraulic_Resistance import Hydraulic_Resistance
-from PLOT import PLOT_ALL, PLOT_CP_SUCCION_SIDE, PLOT_AIRFOIL, PLOT_CP_COMPARISON, PLOT_CP_PRESSURE_SIDE
-from Hydraulic_GEOMETRY import Pore_Geometry, pressure_succion_side 
+from COMPUTATION.Hydraulic_Resistance import Hydraulic_Resistance
 from Porous_SPVP import INIT_POROUS_GEOMETRY, POROUS_SPVP
 
 if __name__ == "__main__":
@@ -13,7 +10,7 @@ if __name__ == "__main__":
     CD_porous_list = []
     CL_solid_list = []
     CD_solid_list = []
-    AoA_list  = np.linspace(0,5,6)                                                                        # Angle of attack [deg]
+    AoA_list  = np.linspace(0,20,6)                                                                        # Angle of attack [deg]
 
     for AoA in AoA_list:
         #%% User-defined knowns
@@ -60,6 +57,7 @@ if __name__ == "__main__":
         #Pores characteristics
         Rs,Dh,A = Hydraulic_Resistance(mu,L,type,pore_geometry)
         XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out,low_point,high_point,pore_intern_co_XB_low,pore_intern_co_YB_low,pore_intern_co_XB_high,pore_intern_co_YB_high,S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low,S_pore_high,phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high = INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,out_point,entry_point,a,power=power,is_straight=1)
+
         #%% Macro variable
         Fluid_characteristics = {
             "Vinf" : Vinf,
@@ -128,8 +126,6 @@ if __name__ == "__main__":
         CL_CD_solid_list.append(CL_solid_list[i]/CD_solid_list[i])
         CL_CD_porous_list.append(CL_porous_list[i]/CD_porous_list[i])
     
-    print('CL_porous_list = ',CL_porous_list)
-    print('CL_solid_list = ',CL_solid_list)
     # %% PLOT Result
     fig = plt.figure() 
     plt.plot(AoA_list,CL_porous_list,label='Porous')
@@ -156,12 +152,12 @@ if __name__ == "__main__":
     plt.legend()
 
     plt.show()
-    PLOT_AIRFOIL(XB,YB,low_point,high_point,alone=1)
+    #PLOT_AIRFOIL(XB,YB,low_point,high_point,alone=1)
     #PLOT_CP_COMPARISON(XB,XC,Cp,Cp_Solid,pore_entry,pore_exit,label1='Porous',label2='Solid',alone = False)
     #PLOT_CP_PRESSURE_SIDE(XC,YC, Cp, Cp_inter_low, low_point, pore_intern_co_XC_low, alone = False)
     #PLOT_CP_SUCCION_SIDE(XC,YC, Cp, Cp_inter_high, high_point, pore_intern_co_XC_high, alone = False)
     
-    PLOT_ALL(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma)
+    #PLOT_ALL(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma)
 
 
 

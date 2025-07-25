@@ -3,7 +3,7 @@
 import numpy as np
 import math as math
 
-def GEOMETRY(numPan,XB,YB,AoAR):
+def GENERATE_GEOMETRY(numPan,XB,YB,AoAR):
     # Initialize variables
     XC  = np.zeros(numPan)                                                          # Initialize control point X-coordinate array
     YC  = np.zeros(numPan)                                                          # Initialize control point Y-coordinate array

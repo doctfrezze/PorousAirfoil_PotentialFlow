@@ -3,17 +3,11 @@
 import numpy as np
 import math as math
 
-from COMPUTATION.COMPUTE_IJ_SPM import COMPUTE_IJ_SPM
-from COMPUTATION.COMPUTE_KL_VPM import COMPUTE_KL_VPM
-from COMPUTATION.COMPUTE_A_SPVP import COMPUTE_A_SPVP
-from COMPUTATION.COMPUTE_b_SPVP import COMPUTE_b_SPVP
-from COMPUTATION.COMPUTE_SOLUTION_SPVP import COMPUTE_SOLUTION_SPVP
-from COMPUTATION.COMPUTE_Vt_Cp import COMPUTE_Vt_Cp
-from COMPUTATION.COMPUTE_LIFT_MOMENT import COMPUTE_LIFT_MOMENT
+from COMPUTATION.COMPUTE import *
 from PLOT import PLOT_ALL
-from NACA import GENERATE_NACA4
-from GEOMETRY import GEOMETRY
-from PANEL_DIRECTIONS import PANEL_DIRECTIONS
+from GEOMETRY.NACA import GENERATE_NACA4
+from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY
+from GEOMETRY.PANEL_DIRECTIONS import PANEL_DIRECTIONS
 
 def SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics={},is_porous = 1,Delta_Cp=0,low_point = [],high_point = []):
     #%%Unpack maro variables
@@ -90,13 +84,13 @@ if __name__ == '__main__':
                 1]      # Pressure coefficient contour
 
     # AirFoil panels
-    numPan = 10
+    numPan = 100
     NameAirfoil = "0018"
     power = 3
 
     #%% initialisation
     XB, YB = GENERATE_NACA4(NameAirfoil,n=int(numPan/2+1),power=power)
-    XC,YC,S,phi,delta,beta = GEOMETRY(numPan,XB,YB,AoAR)
+    XC,YC,S,phi,delta,beta = GENERATE_GEOMETRY(numPan,XB,YB,AoAR)
 
     #%% Macro Variables
     Fluid_characteristics = {

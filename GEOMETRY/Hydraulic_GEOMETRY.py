@@ -3,7 +3,7 @@ import math as math
 import matplotlib.pyplot as plt
 
 
-from GEOMETRY import GEOMETRY
+from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY
 
 
 def Pore_Geometry(XB_pore,YB_pore):
@@ -72,14 +72,12 @@ def pressure_succion_side(numPan,pore_entry,pore_exit):
     if any(x>numPan/2 for x in pore_exit):
         pore_exit_succion_side = [x for x in pore_exit if x > numPan/2]
         if any(x<numPan/2 for x in pore_exit):
-            print('Case n1')
             pore_exit_pressure_side = [x for x in pore_exit if x < numPan/2]
             high_point1 = list(range(numPan))
             low_point1 = list(range(numPan))
             high_point = high_point1[max(pore_entry)+1:min(pore_exit_succion_side)]
             low_point = low_point1[max(pore_exit_pressure_side)+1:min(pore_entry)]
         else:
-            print('Case n2')
             high_point1 = list(range(numPan))
             low_point1 = list(range(numPan))
             high_point = high_point1[max(pore_entry)+1:min(pore_exit)]
@@ -87,7 +85,6 @@ def pressure_succion_side(numPan,pore_entry,pore_exit):
             if (max(pore_exit)<numPan-1):
                 low_point.extend(low_point1[max(pore_exit)+1:numPan])
     else:
-        print('Case n3')
         pore_exit_pressure_side = [x for x in pore_exit if x < numPan/2]
         high_point1 = list(range(numPan))
         low_point1 = list(range(numPan))
@@ -138,8 +135,7 @@ def Refine_GEOMETRY(XB,NameAirfoil, entry_point, out_point,AoAR,n_refinement=10)
                       + 0.2843 * (XB[lim+1:] / c)**3 - 0.1015 * (XB[lim+1:] / c)**4)
     YB = np.concatenate([YB_DOWN,YB_UP])
     numPan = len(XB)-1
-    XC,YC,S,phi,delta,beta = GEOMETRY(numPan,XB,YB,AoAR)
-    print(len(phi))
+    XC,YC,S,phi,delta,beta = GENERATE_GEOMETRY(numPan,XB,YB,AoAR)
     return XB,YB,XC,YC,S,phi,delta,beta,int(entry_point),int(out_point)
 
 
