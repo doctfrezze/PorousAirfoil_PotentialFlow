@@ -10,7 +10,7 @@ if __name__ == "__main__":
     CD_porous_list = []
     CL_solid_list = []
     CD_solid_list = []
-    AoA_list  = np.linspace(0,20,6)                                                                        # Angle of attack [deg]
+    AoA_list  = np.linspace(0,180,19)                                                                        # Angle of attack [deg]
 
     for AoA in AoA_list:
         #%% User-defined knowns
@@ -18,7 +18,7 @@ if __name__ == "__main__":
         rhoinf = 1                                                                      # Density [] (just leave this at 1)
         Re = 160000                                                                      # Reynolds number
         
-        numPan = 100
+        numPan = 70
         power = 3
         NameAirfoil = "0018"
         
@@ -32,9 +32,9 @@ if __name__ == "__main__":
         
         #Pore geometry
         type = 'rectangle'
-        pore_geometry = [0.157,0.025]
+        pore_geometry = [0.157,0.01]
         L = 0.89
-        a = 0.025                       #Height of the pores
+        a = 0.01                       #Height of the pores
         n = 1/0.166
         entry_point = 36
         out_point = 5
@@ -142,7 +142,8 @@ if __name__ == "__main__":
     plt.ylabel('Drag Coefficient (CD)')
     plt.title('Drag Coefficient vs Angle of Attack')
     plt.legend()
-
+    print(AoA_list)
+    print(CD_solid_list)
     fig = plt.figure() 
     plt.plot(AoA_list,CL_CD_porous_list,label='Porous')
     plt.plot(AoA_list,CL_CD_solid_list, label = 'Solid')

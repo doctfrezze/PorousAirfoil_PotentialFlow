@@ -1,5 +1,6 @@
 import numpy as np
 import math as math
+import matplotlib.pyplot as plt
 
 def COMPUTE_A_SPVP(numPan,I,K,J,L):
     # Populate A matrix
@@ -53,10 +54,11 @@ def COMPUTE_b_SPVP(Airfoil_geometry,Fluid_characteristics,Delta_Cp,Pore_characte
             normal_vs_pore_in = delta[i]-np.pi*(omega_in)/180
             normal_vs_pore_out = delta[i]-np.pi*(omega_out)/180
             V_mean = 0.5*rhoinf*Vinf**2*Delta_Cp/Rs*n/a
-            Re_laminar = Dh*rhoinf*V_mean/mu
-            if Re_laminar >= 2000:                                                      #Turbulence 
+            Re_laminar = Dh*rhoinf*abs(V_mean)/mu
+            if Re_laminar >= 2000:                                                      #Turbulence
                 Delta_P = Delta_Cp*0.5*rhoinf*Vinf**2
                 V_mean=2.868*((Delta_P**4)*(Dh**5)/((L**4)*mu*(rhoinf**3)))**(1/7)
+                Re_turbulent = Dh*rhoinf*abs(V_mean)/mu
             if i in pore_entry:
                 b[i] = -Vinf*2*np.pi*np.cos(beta[i]) + V_mean#*np.cos(normal_vs_pore_in) # Compute RHS array
             elif i in pore_out:
@@ -172,8 +174,8 @@ def COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_character
     else:
         low_point = Pore_characteristics['low_point']
         high_point = Pore_characteristics['high_point']
-        S_pore_low = Pore_characteristics['phi_pore_low']
-        S_pore_high = Pore_characteristics['phi_pore_high']
+        S_pore_low = Pore_characteristics['S_pore_low']
+        S_pore_high = Pore_characteristics['S_pore_high']
         phi_pore_low = Pore_characteristics['phi_pore_low']
         phi_pore_high = Pore_characteristics['phi_pore_high']
         AoAR = Fluid_characteristics['AoAR']
@@ -185,15 +187,16 @@ def COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_character
         CL += -2*Delta_Cp*A*np.sin(phi_pore_high[0])
 
         CD = sum(-Cp[i]*S[i]*np.cos(beta[i]) for i in low_point)
-        print('1 :', CD)                             
         CD += sum(-Cp[i]*S[i]*np.cos(beta[i]) for i in high_point)
-        print('2 :',CD)
         CD += sum(-Cp_inter_low*S_pore_low*np.cos(phi_pore_low+(np.pi/2)-AoAR))
-        print('3 :',CD)
         CD += sum(-Cp_inter_high*S_pore_high*np.cos(phi_pore_high+(np.pi/2)-AoAR))
-        print('4 :',CD)
         CD += -2*Delta_Cp*A*np.cos(phi_pore_high[0])
-        print('5 :',CD)
+        Y = np.zeros(len(XC))
+        for i in high_point:
+            Y[i] = -Cp[i]*S[i]*np.cos(beta[i]) 
+        for i in low_point:
+            Y[i] = -Cp[i]*S[i]*np.cos(beta[i])
+
 
         CM = sum(Cp[i]*(XC[i]-0.25)*S[i]*np.cos(phi[i]) + Cp[i]*YC[i]*S[i]*np.sin(phi[i]) for i in low_point)           
         CM += sum(Cp[i]*(XC[i]-0.25)*S[i]*np.cos(phi[i]) + Cp[i]*YC[i]*S[i]*np.sin(phi[i]) for i in high_point)                 
@@ -243,7 +246,7 @@ def COMPUTE_Vt_Cp(Airfoil_geometry,Fluid_characteristics,Delta_Cp,gamma,lam,b,J,
         term4 = -(gamma/(2*np.pi))*sum(L[i,:])                                      # Vortex panel terms when j is not equal to i
         if is_porous:
             V_mean = 0.5*rhoinf*Vinf**2*Delta_Cp/Rs*n/a
-            Re_laminar = Dh*rhoinf*V_mean/mu
+            Re_laminar = Dh*rhoinf*abs(V_mean)/mu
             if Re_laminar >= 2000 and is_porous:                                                      #Turbulence 
                 Delta_P = Delta_Cp*0.5*rhoinf*Vinf**2
                 V_mean=2.868*((Delta_P**4)*(Dh**5)/((Length**4)*mu*(rhoinf**3)))**(1/7)

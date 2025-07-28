@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 def XFOIL_DATA(AirfoilName,AoA):
-    filename = "XFOIL_DATA/"+AirfoilName+"_"+str(AoA)+"deg.dat"
+    filename = "X_FOIL/XFOIL_DATA/"+AirfoilName+"_"+str(AoA)+"deg.dat"
     # Charger les données
     # skiprows=1 pour sauter la ligne d'entête
     data = np.loadtxt(filename, skiprows=1)

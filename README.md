@@ -9,11 +9,6 @@ This repository implements a **Source Panel Method with Vortex correction (SPVP)
 - `AoA_Sweep.py`  
   This script compares the aerodynamic performance of a porous and a solid airfoil using the SPVP method across a range of angles of attack. It computes and plots the lift (CL), drag (CD), and lift-to-drag ratio (CL/CD) for both configurations.
 
-- `COMPARAISON.py`  
-    This script compares pressure coefficients, lift (CL), and moment (CM) between the SPVP panel method and XFOIL for a NACA airfoil.  
-    It includes both local Cp comparisons at a fixed angle of attack and global CL/CM trends over a range of angles.
-
-
 - `SPVP_Airfoil.py`  
   This script implements the Source and Vortex Panel Method (SPVP) to compute the pressure distribution, lift, moment, and drag coefficients of a NACA 4-digit airfoil. It supports both porous and solid configurations and provides detailed visualizations of aerodynamic quantities.
 
@@ -34,6 +29,12 @@ This repository implements a **Source Panel Method with Vortex correction (SPVP)
   - `X_FOIL.py`: Reads XFOIL-generated data files.  
   - `X_FOIL_DATA/`: Directory containing `.dat` files exported from XFOIL.
 
+- `Example1.py`
+  This example demonstrates the SPVP panel method to simulate a solid airfoil’s aerodynamics by defining its geometry, calculating aerodynamic coefficients, and visualizing pressure distribution and streamlines.
+
+- `Example2.py`
+  This example applies the panel method to porous airfoils, computing aerodynamic coefficients and visualizing differences with solid airfoils.
+
 ---
 
 ## ⚙️ Features
@@ -47,7 +48,7 @@ This repository implements a **Source Panel Method with Vortex correction (SPVP)
 - **XFOIL Integration**  
   Imports `.dat` files generated with XFOIL for validation and comparison.
 
-- **Porous Surface Modeling (Experimental)**  
+- **Porous Surface Modeling**  
   Adds porous resistance through hydraulic modeling components.
 
 ---
@@ -59,4 +60,16 @@ This repository implements a **Source Panel Method with Vortex correction (SPVP)
 Install required dependencies:
 
 ```bash
-pip install numpy matplotlib
+pip install numpy 
+pip install matplotlib
+pip install scipy
+```
+### 2. Examples
+
+#### Example 1 : Solid Airfoil
+This example demonstrates the use of the panel method (SPVP) to simulate the aerodynamic behavior of a solid airfoil.  
+It shows how to define the airfoil geometry, compute aerodynamic coefficients, and visualize results such as pressure distribution and streamlines.
+
+#### Example 2 : Porous Airfoil
+
+This example demonstrates the application of the panel method adapted for porous airfoils. It computes the aerodynamic coefficients and pressure distributions for a NACA 4-digit airfoil with porous panels, accounting for hydraulic resistance and pore geometry effects. Various plots visualize the flow characteristics and compare porous versus solid airfoil results.

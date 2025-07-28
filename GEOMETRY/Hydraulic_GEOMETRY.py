@@ -77,6 +77,7 @@ def pressure_succion_side(numPan,pore_entry,pore_exit):
             low_point1 = list(range(numPan))
             high_point = high_point1[max(pore_entry)+1:min(pore_exit_succion_side)]
             low_point = low_point1[max(pore_exit_pressure_side)+1:min(pore_entry)]
+            print('1')
         else:
             high_point1 = list(range(numPan))
             low_point1 = list(range(numPan))
@@ -84,6 +85,7 @@ def pressure_succion_side(numPan,pore_entry,pore_exit):
             low_point = low_point1[0:min(pore_entry)]
             if (max(pore_exit)<numPan-1):
                 low_point.extend(low_point1[max(pore_exit)+1:numPan])
+            print('2')
     else:
         pore_exit_pressure_side = [x for x in pore_exit if x < numPan/2]
         high_point1 = list(range(numPan))
