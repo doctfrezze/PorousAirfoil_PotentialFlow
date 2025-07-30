@@ -10,7 +10,7 @@ if __name__ == "__main__":
     CD_porous_list = []
     CL_solid_list = []
     CD_solid_list = []
-    AoA_list  = np.linspace(0,180,19)                                                                        # Angle of attack [deg]
+    AoA_list  = np.linspace(0,10,11)                                                                        # Angle of attack [deg]
 
     for AoA in AoA_list:
         #%% User-defined knowns
@@ -18,8 +18,8 @@ if __name__ == "__main__":
         rhoinf = 1                                                                      # Density [] (just leave this at 1)
         Re = 160000                                                                      # Reynolds number
         
-        numPan = 70
-        power = 3
+        numPan = 100
+        power = 1
         NameAirfoil = "0018"
         
         # Plotting flags

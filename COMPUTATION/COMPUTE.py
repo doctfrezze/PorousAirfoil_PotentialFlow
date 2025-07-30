@@ -169,6 +169,7 @@ def COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_character
     if not is_porous:
         CL = sum(-Cp*S*np.sin(beta))
         CD = sum(-Cp*S*np.cos(beta))
+
         CM = sum(Cp*(XC-0.25)*S*np.cos(phi) + Cp*YC*S*np.sin(phi))                           # Moment coefficient []
     # Compute normal and axial force coefficients
     else:
@@ -191,6 +192,8 @@ def COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_character
         CD += sum(-Cp_inter_low*S_pore_low*np.cos(phi_pore_low+(np.pi/2)-AoAR))
         CD += sum(-Cp_inter_high*S_pore_high*np.cos(phi_pore_high+(np.pi/2)-AoAR))
         CD += -2*Delta_Cp*A*np.cos(phi_pore_high[0])
+
+        
         Y = np.zeros(len(XC))
         for i in high_point:
             Y[i] = -Cp[i]*S[i]*np.cos(beta[i]) 

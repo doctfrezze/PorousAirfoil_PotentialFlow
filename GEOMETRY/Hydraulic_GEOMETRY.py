@@ -97,13 +97,46 @@ def pressure_succion_side(numPan,pore_entry,pore_exit):
     
     return low_point, high_point
 
+def segments_traverses(X, Y, y0, angle_deg):
+    traverses = []
+    
+    # Convertir l'angle en radians et calculer le vecteur direction de la droite
+    angle_rad = np.radians(angle_deg)
+    dx = np.cos(angle_rad)
+    dy = np.sin(angle_rad)
+    
+    # Deux points sur la droite pour créer un segment de test
+    P1 = np.array([0, y0])
+    P2 = P1 + np.array([dx, dy])  # point plus loin sur la droite
+    
+    def ccw(A, B, C):
+        return (C[1]-A[1]) * (B[0]-A[0]) > (B[1]-A[1]) * (C[0]-A[0])
 
-def Refine_GEOMETRY(XB,NameAirfoil, entry_point, out_point,AoAR,n_refinement=10):
+    def intersect(A, B, C, D):
+        return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
+    
+    for i in range(len(X) - 1):
+        A = np.array([X[i], Y[i]])
+        B = np.array([X[i+1], Y[i+1]])
+        if intersect(P1, P2, A, B):
+            traverses.append(i)
+    
+    return traverses
+
+def Refine_GEOMETRY(XB,YB,NameAirfoil, y0,angle_pore,AoAR,n_refinement=10):
     m = int(NameAirfoil[0])*0.01
     p = int(NameAirfoil[1])*0.1
     t = int(NameAirfoil[2:4])*0.01
     c = 1
-    if entry_point <= 0 or entry_point >= len(XB)-1:
+    seg_edge_pore = segments_traverses(XB,YB,y0,angle_deg=angle_pore)
+    print(seg_edge_pore)
+    if XB[seg_edge_pore[0]]>XB[seg_edge_pore[1]]:
+        entry_point = seg_edge_pore[1]
+        out_point = seg_edge_pore[0]
+    else:
+        entry_point = seg_edge_pore[0]
+        out_point = seg_edge_pore[1]
+    if entry_point < 0 or entry_point >= len(XB)-1:
         raise ValueError("i doit être un indice interne (1 <= i <= len(X)-2)")
 
     x_prev_in = XB[entry_point-1]
@@ -131,10 +164,10 @@ def Refine_GEOMETRY(XB,NameAirfoil, entry_point, out_point,AoAR,n_refinement=10)
     
     #YB_DOWN = -np.sqrt((0.25-(XB[:lim+1]-0.5)*(XB[:lim+1]-0.5))/9)
     YB_DOWN = -5 * t * c * (0.2969 * np.sqrt(XB[:lim+1] / c) - 0.1260 * (XB[:lim+1] / c) - 0.3516 * (XB[:lim+1] / c)**2 
-                      + 0.2843 * (XB[:lim+1] / c)**3 - 0.1015 * (XB[:lim+1] / c)**4)
+                      + 0.2843 * (XB[:lim+1] / c)**3 - 0.1036 * (XB[:lim+1] / c)**4)
     #YB_UP = np.sqrt((0.25-(XB[lim+1:]-0.5)*(XB[lim+1:]-0.5))/9)
     YB_UP = 5 * t * c * (0.2969 * np.sqrt(XB[lim+1:] / c) - 0.1260 * (XB[lim+1:] / c) - 0.3516 * (XB[lim+1:] / c)**2 
-                      + 0.2843 * (XB[lim+1:] / c)**3 - 0.1015 * (XB[lim+1:] / c)**4)
+                      + 0.2843 * (XB[lim+1:] / c)**3 - 0.1036 * (XB[lim+1:] / c)**4)
     YB = np.concatenate([YB_DOWN,YB_UP])
     numPan = len(XB)-1
     XC,YC,S,phi,delta,beta = GENERATE_GEOMETRY(numPan,XB,YB,AoAR)

@@ -15,7 +15,7 @@ import math as math
 from SPVP_Airfoil import SPVP                          # Main SPVP computation function
 from PLOT import PLOT_ALL                              # Function to generate all plots
 from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY        # Function to compute geometry from boundary points
-from GEOMETRY.NACA import GENERATE_NACA4, GENERATE_EQUAL_NACA4               # Function to generate NACA 4-digit airfoils
+from GEOMETRY.ELLIPSE import GENERATE_ELLIPSE, GENERATE_EQUAL_ELLIPSE               # Function to generate NACA 4-digit airfoils
 
 # Main entry point of the script
 if __name__ == '__main__':
@@ -38,15 +38,15 @@ if __name__ == '__main__':
                 0]      # 5: Cp contour plot over domain
 
     # Airfoil parameters
-    numPan = 100             # Number of panels (discretization segments)
+    numPan = 200             # Number of panels (discretization segments)
     NameAirfoil = "0018"     # NACA 4-digit airfoil code
-    power = 2/3                # Point spacing exponent for clustering near leading/trailing edges
+    power = 1                # Point spacing exponent for clustering near leading/trailing edges
 
     #%% ================================
     #          Geometry initialization
     #==================================
     # Generate boundary coordinates for the NACA airfoil
-    XB, YB = GENERATE_NACA4(NameAirfoil, NumPan=numPan, power=power)
+    XB, YB = GENERATE_ELLIPSE(NameAirfoil, NumPan=numPan, power=power)
 
     #YB[0], YB[-1] = 0, 0
 

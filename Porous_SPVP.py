@@ -8,17 +8,16 @@ from COMPUTATION.Hydraulic_Resistance import Hydraulic_Resistance
 from PLOT import *
 from GEOMETRY.Hydraulic_GEOMETRY import *
 from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY
-from GEOMETRY.NACA import GENERATE_NACA4
+from GEOMETRY.NACA import GENERATE_NACA4, GENERATE_EQUAL_NACA4
 from COMPUTATION.COMPUTE import COMPUTE_LIFT_MOMENT
 
-def INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,out_point,entry_point,a,power=1,is_straight=1):
+def INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,y0,angle_pore,a,power=1,is_straight=1):
     AoAR = AoA*(np.pi/180)                                                          # Angle of attack [rad]
-    XB, YB = GENERATE_NACA4(NameAirfoil,n=int(numPan/2+1),power=power)
+    XB, YB = GENERATE_NACA4(NameAirfoil,NumPan=numPan,power=power)
     XC,YC,S,phi,delta,beta = GENERATE_GEOMETRY(numPan,XB,YB,AoAR)
-    if is_straight:
-        omega_in = math.atan2(YC[out_point]-YC[entry_point],XC[out_point]-XC[entry_point])
-        omega_out = math.atan2(YC[out_point]-YC[entry_point],XC[out_point]-XC[entry_point])
-    XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point = Refine_GEOMETRY(XB,NameAirfoil,entry_point,out_point,AoAR)
+    omega_in = angle_pore
+    omega_out = angle_pore
+    XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point = Refine_GEOMETRY(XB,YB,NameAirfoil,y0,angle_pore,AoAR)
     numPan = len(XB)-1
 
     pore_entry = Hydraulic_GEOMETRY(XC,YC,omega_in,a,entry_point)
@@ -33,7 +32,7 @@ def INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,out_point,ent
 
     S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low = Pore_Geometry(pore_intern_co_XB_low,pore_intern_co_YB_low)
     S_pore_high,phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high = Pore_Geometry(pore_intern_co_XB_high,pore_intern_co_YB_high)
-    return XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out,low_point,high_point,pore_intern_co_XB_low,pore_intern_co_YB_low,pore_intern_co_XB_high,pore_intern_co_YB_high,S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low,S_pore_high,phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high
+    return XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out,low_point,high_point,pore_intern_co_XB_low,pore_intern_co_YB_low,pore_intern_co_XB_high,pore_intern_co_YB_high,S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low,S_pore_high,phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high,entry_point, out_point
 
 def POROUS_SPVP(tol,max_iter,Pore_characteristics,Fluid_characteristics,Airfoil_geometry):
     
@@ -87,7 +86,7 @@ if __name__ == "__main__":
     Re = 160000                                                                      # Reynolds number
     AoA  = 4                                                                     # Angle of attack [deg]
     
-    numPan = 500
+    numPan = 300
     power = 3
     NameAirfoil = "0018"
     
@@ -105,7 +104,9 @@ if __name__ == "__main__":
     L = 0.89
     a = 0.010                       #Height of the pores
     n = 1/0.166
-    entry_point = 200
+    y0 = -0.04
+    angle_pore = 0
+    entry_point = 36
     out_point = 5
     omega_in = 0
     omega_out = 0
@@ -124,7 +125,7 @@ if __name__ == "__main__":
 
 
     AoAR = AoA*np.pi/180
-    XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out,low_point,high_point,pore_intern_co_XB_low,pore_intern_co_YB_low,pore_intern_co_XB_high,pore_intern_co_YB_high,S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low,S_pore_high,phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high = INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,out_point,entry_point,a,power=power,is_straight=1)
+    XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out,low_point,high_point,pore_intern_co_XB_low,pore_intern_co_YB_low,pore_intern_co_XB_high,pore_intern_co_YB_high,S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low,S_pore_high,phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high,entry_point, out_point = INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,y0,angle_pore,a,power=power,is_straight=1)
     #%% Macro variable
     Fluid_characteristics = {
         "Vinf" : Vinf,
@@ -188,8 +189,8 @@ if __name__ == "__main__":
     # %% PLOT Result
     PLOT_AIRFOIL(XB,YB,low_point,high_point,alone=0)
     PLOT_CP_COMPARISON(XB,XC,Cp,Cp_Solid,pore_entry,pore_exit,label1='Porous',label2='Solid',alone = False)
-    PLOT_CP_PRESSURE_SIDE(XC,YC, Cp, Cp_inter_low, low_point, pore_intern_co_XC_low, alone = False)
-    PLOT_CP_SUCCION_SIDE(XC,YC, Cp, Cp_inter_high, high_point, pore_intern_co_XC_high, alone = False)
+    #PLOT_CP_PRESSURE_SIDE(XC,YC, Cp, Cp_inter_low, low_point, pore_intern_co_XC_low, alone = False)
+    #PLOT_CP_SUCCION_SIDE(XC,YC, Cp, Cp_inter_high, high_point, pore_intern_co_XC_high, alone = False)
     
     print('CL_Porous = ', CL)
     print('CL_solid = ', CL_Solid)
