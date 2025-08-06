@@ -21,5 +21,6 @@ def Hydraulic_Resistance(mu,L,type='circular',geometry=[1]):
         A = math.pi*Dh**2/4
     else:
         print('Error: geometry is not defined correctly')
+        print('type = ',type, '       geometry = ',geometry)
     return R,Dh,A
     

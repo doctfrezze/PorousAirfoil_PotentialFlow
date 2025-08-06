@@ -26,11 +26,11 @@ if __name__ == '__main__':
     rhoinf = 1             # Freestream density
     Re = 160000              # Reynolds number
     mu = Vinf * rhoinf / Re  # Dynamic viscosity
-    AoA  = 0               # Angle of attack [degrees]
+    AoA  = 3               # Angle of attack [degrees]
     AoAR = np.pi * AoA / 180  # Angle of attack [radians]
 
     # Plot flags: each 1 enables a specific visualization
-    flagPlot = [0,      # 0: Airfoil with panel normal vectors
+    flagPlot = [1,      # 0: Airfoil with panel normal vectors
                 0,      # 1: Geometry (boundary pts, control pts, panel indicators)
                 0,      # 2: Cp vectors along the airfoil surface
                 0,      # 3: Cp comparison plot (XFOIL vs SPVP)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     #          Geometry initialization
     #==================================
     # Generate boundary coordinates for the NACA airfoil
-    XB, YB = GENERATE_ELLIPSE(NameAirfoil, NumPan=numPan, power=power)
+    XB, YB = GENERATE_ELLIPSE(NumPan=numPan, power=power)
 
     #YB[0], YB[-1] = 0, 0
 

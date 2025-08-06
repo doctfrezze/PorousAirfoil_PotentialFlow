@@ -99,45 +99,63 @@ def pressure_succion_side(numPan,pore_entry,pore_exit):
 
 def segments_traverses(X, Y, y0, angle_deg):
     traverses = []
-    
-    # Convertir l'angle en radians et calculer le vecteur direction de la droite
-    angle_rad = np.radians(angle_deg)
-    dx = np.cos(angle_rad)
-    dy = np.sin(angle_rad)
-    
-    # Deux points sur la droite pour créer un segment de test
-    P1 = np.array([0, y0])
-    P2 = P1 + np.array([dx, dy])  # point plus loin sur la droite
-    
-    def ccw(A, B, C):
-        return (C[1]-A[1]) * (B[0]-A[0]) > (B[1]-A[1]) * (C[0]-A[0])
+    if angle_deg ==90 or angle_deg == -90:
+        for i in range(len(X) - 1):
+            x1, x2 = X[i], X[i+1]
+            # On vérifie si la droite verticale x = A est entre x1 et x2
+            if (x1 - y0) * (x2 - y0) <= 0 and x1 != x2:
+                traverses.append(i)
+        vertical = 1
+    else:
+        # Convertir l'angle en radians et calculer le vecteur direction de la droite
+        angle_rad = np.radians(angle_deg)
+        dx = np.cos(angle_rad)
+        dy = np.sin(angle_rad)
+        
+        # Deux points sur la droite pour créer un segment de test
+        P1 = np.array([0, y0])
+        P2 = P1 + 100*np.array([dx, dy])  # point plus loin sur la droite
+        
+        def ccw(A, B, C):
+            return (C[1]-A[1]) * (B[0]-A[0]) > (B[1]-A[1]) * (C[0]-A[0])
 
-    def intersect(A, B, C, D):
-        return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
-    
-    for i in range(len(X) - 1):
-        A = np.array([X[i], Y[i]])
-        B = np.array([X[i+1], Y[i+1]])
-        if intersect(P1, P2, A, B):
-            traverses.append(i)
-    
-    return traverses
+        def intersect(A, B, C, D):
+            return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
+        
+        for i in range(len(X) - 1):
+            A = np.array([X[i], Y[i]])
+            B = np.array([X[i+1], Y[i+1]])
+            if intersect(P1, P2, A, B):
+                traverses.append(i)
+        vertical =0
+    print(traverses)
+    return traverses,vertical
 
 def Refine_GEOMETRY(XB,YB,NameAirfoil, y0,angle_pore,AoAR,n_refinement=10):
     m = int(NameAirfoil[0])*0.01
     p = int(NameAirfoil[1])*0.1
     t = int(NameAirfoil[2:4])*0.01
     c = 1
-    seg_edge_pore = segments_traverses(XB,YB,y0,angle_deg=angle_pore)
-    print(seg_edge_pore)
-    if XB[seg_edge_pore[0]]>XB[seg_edge_pore[1]]:
-        entry_point = seg_edge_pore[1]
-        out_point = seg_edge_pore[0]
+    seg_edge_pore, vertical = segments_traverses(XB,YB,y0,angle_deg=angle_pore)
+    if not vertical:
+        if XB[seg_edge_pore[0]]>XB[seg_edge_pore[1]]:
+            entry_point = seg_edge_pore[1]
+            out_point = seg_edge_pore[0]
+        else:
+            entry_point = seg_edge_pore[0]
+            out_point = seg_edge_pore[1]
+        if entry_point < 0 or entry_point >= len(XB)-1:
+            raise ValueError("i doit être un indice interne (1 <= i <= len(X)-2)")
+    
     else:
-        entry_point = seg_edge_pore[0]
-        out_point = seg_edge_pore[1]
-    if entry_point < 0 or entry_point >= len(XB)-1:
-        raise ValueError("i doit être un indice interne (1 <= i <= len(X)-2)")
+        if YB[seg_edge_pore[0]]>YB[seg_edge_pore[1]]:
+            entry_point = seg_edge_pore[1]
+            out_point = seg_edge_pore[0]
+        else:
+            entry_point = seg_edge_pore[0]
+            out_point = seg_edge_pore[1]
+        if entry_point < 0 or entry_point >= len(XB)-1:
+            raise ValueError("i doit être un indice interne (1 <= i <= len(X)-2)")
 
     x_prev_in = XB[entry_point-1]
     x_curr_in = XB[entry_point+2]
@@ -173,6 +191,59 @@ def Refine_GEOMETRY(XB,YB,NameAirfoil, y0,angle_pore,AoAR,n_refinement=10):
     XC,YC,S,phi,delta,beta = GENERATE_GEOMETRY(numPan,XB,YB,AoAR)
     return XB,YB,XC,YC,S,phi,delta,beta,int(entry_point),int(out_point)
 
+
+def Refine_GEOMETRY_ELLIPSE(XB,YB, y0,angle_pore,AoAR,n_refinement=10):
+    c = 1
+    seg_edge_pore, vertical = segments_traverses(XB,YB,y0,angle_deg=angle_pore)
+    if not vertical:
+        if XB[seg_edge_pore[0]]>XB[seg_edge_pore[1]]:
+            entry_point = seg_edge_pore[1]
+            out_point = seg_edge_pore[0]
+        else:
+            entry_point = seg_edge_pore[0]
+            out_point = seg_edge_pore[1]
+        if entry_point < 0 or entry_point >= len(XB)-1:
+            raise ValueError("i doit être un indice interne (1 <= i <= len(X)-2)")
+    
+    else:
+        if YB[seg_edge_pore[0]]>YB[seg_edge_pore[1]]:
+            entry_point = seg_edge_pore[1]
+            out_point = seg_edge_pore[0]
+        else:
+            entry_point = seg_edge_pore[0]
+            out_point = seg_edge_pore[1]
+        if entry_point < 0 or entry_point >= len(XB)-1:
+            raise ValueError("i doit être un indice interne (1 <= i <= len(X)-2)")
+
+    x_prev_in = XB[entry_point-1]
+    x_curr_in = XB[entry_point+2]
+
+    x_prev_out = XB[out_point-1]
+    x_curr_out = XB[out_point+2]
+
+    # Points de transition
+    trans_in = np.linspace(x_prev_in, x_curr_in, n_refinement + 2)[1:-1]
+    trans_out = np.linspace(x_prev_out, x_curr_out, n_refinement + 2)[1:-1]
+    if entry_point < out_point:
+        XB = np.concatenate([XB[:entry_point],trans_in, XB[entry_point+2:out_point],trans_out,XB[out_point+2:]])
+        entry_point += (n_refinement-1)/2
+        out_point +=n_refinement+(n_refinement-1)/2
+    elif out_point < entry_point:
+        XB = np.concatenate([XB[:out_point],trans_out,XB[out_point+2:entry_point],trans_in,XB[entry_point+2:]])
+        out_point += (n_refinement-1)/2
+        entry_point +=n_refinement+(n_refinement-1)/2
+    
+    for i in range(len(XB)):
+        if XB[i] < XB[i+1]:
+            lim = i
+            break
+    
+    YB_DOWN = -np.sqrt((0.25-(XB[:lim+1]-0.5)*(XB[:lim+1]-0.5))/9)
+    YB_UP = np.sqrt((0.25-(XB[lim+1:]-0.5)*(XB[lim+1:]-0.5))/9)
+    YB = np.concatenate([YB_DOWN,YB_UP])
+    numPan = len(XB)-1
+    XC,YC,S,phi,delta,beta = GENERATE_GEOMETRY(numPan,XB,YB,AoAR)
+    return XB,YB,XC,YC,S,phi,delta,beta,int(entry_point),int(out_point)
 
      
 def plot_line(a, b, x_min=0, x_max=1):

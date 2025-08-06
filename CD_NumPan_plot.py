@@ -20,7 +20,7 @@ CD_power3_ellipse = [0.00001790, -0.00000208, 0.00000002, 0.00000182, -0.0000002
 CD_power0_66_ellipse = [-0.00000731, 0.00000269, -0.00000189,-0.00000183]
 
 fig = plt.figure()
-plt.title('CD vs Number of panels (NACA 0018)')
+plt.title('Err of CD vs Number of panels (NACA 0018)')
 plt.plot(NumPan,abs(CD_equal),c='r',marker = 'd',label='Equal size panels')
 plt.plot(NumPan,abs(CD_power1),c='g',marker = '.',label='Power = 1')
 plt.plot(NumPan,abs(CD_power3),c='b',marker = 'v',label='Power = 3')
@@ -30,7 +30,7 @@ plt.grid(True)
 plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('Panels number')
-plt.ylabel('Drag Coefficient $C_D$')
+plt.ylabel('Error of Drag Coefficient $C_D$')
 plt.legend()
 plt.ylim(0,0.015)
 plt.show()

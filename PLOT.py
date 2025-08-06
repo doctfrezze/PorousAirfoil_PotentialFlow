@@ -318,7 +318,97 @@ def PLOT_CP_SUCCION_SIDE(XC,YC, Cp_extern, Cp_intern, high_point, X_intern, alon
     if alone:                                                          # If alone is 1
         plt.show()
 
+def plot_convergence(h_list, CL_matrix, CD_matrix, CL_extrapolated, CD_extrapolated, aoa_values):
+    num_aoa = len(aoa_values)
 
+    for i in range(num_aoa):
+        aoa = aoa_values[i]
+
+        # Original data
+        h_vals = np.array(h_list)
+        cl_vals = CL_matrix[i, :]
+        cd_vals = CD_matrix[i, :]
+
+        # --- CL ---
+        plt.figure()
+        plt.plot(h_vals, cl_vals, 'o-', label='CL(h)', color='blue')
+        # Extrapolated point
+        plt.plot(0, CL_extrapolated[i], 'o', color='red', label='Extrapolated')
+        # Dashed line to the last point
+        plt.plot([h_vals[-1], 0], [cl_vals[-1], CL_extrapolated[i]], 'r--')
+        plt.xlabel('h (panel size ~ 1/NumPan)')
+        plt.ylabel('CL')
+        plt.title(f'CL Convergence for AoA = {aoa}°')
+        plt.grid(True)
+        plt.gca().invert_xaxis()
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+        # --- CD ---
+        plt.figure()
+        plt.plot(h_vals, cd_vals, 'o-', label='CD(h)', color='blue')
+        # Extrapolated point
+        plt.plot(0, CD_extrapolated[i], 'o', color='red', label='Extrapolated')
+        # Dashed line to the last point
+        plt.plot([h_vals[-1], 0], [cd_vals[-1], CD_extrapolated[i]], 'r--')
+        plt.xlabel('h (panel size ~ 1/NumPan)')
+        plt.ylabel('CD')
+        plt.title(f'CD Convergence for AoA = {aoa}°')
+        plt.grid(True)
+        plt.gca().invert_xaxis()
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+
+def plot_extrapolated_vs_aoa(aoa_values, CL_extrapolated1, CD_extrapolated1,  CL_extrapolated2, CD_extrapolated2,  CL_extrapolated3, CD_extrapolated3):
+    # --- CL vs AoA ---
+    plt.figure()
+    plt.plot(aoa_values, CL_extrapolated1, 'o-', color='blue', label='Extrapolated CL Solid')
+    plt.plot(aoa_values, CL_extrapolated2, 'o-', color='red', label='Extrapolated CL Horizontal')
+    plt.plot(aoa_values, CL_extrapolated3, 'o-', color='green', label='Extrapolated CL vertical')
+    plt.xlabel('Angle of Attack (°)')
+    plt.ylabel('Extrapolated CL')
+    plt.title('Extrapolated CL as a Function of AoA')
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+
+    # --- CD vs AoA ---
+    plt.figure()
+    plt.plot(aoa_values, CD_extrapolated1, 'o-', color='blue', label='Extrapolated CD Solid')
+    plt.plot(aoa_values, CD_extrapolated2, 'o-', color='red', label='Extrapolated CD Horizontal')
+    plt.plot(aoa_values, CD_extrapolated3, 'o-', color='green', label='Extrapolated CD Vertical')
+    plt.xlabel('Angle of Attack (°)')
+    plt.ylabel('Extrapolated CD')
+    plt.title('Extrapolated CD as a Function of AoA')
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+
+    # --- CL-CL_SOLID vs AoA ---
+    plt.figure()
+    plt.plot(aoa_values, (CL_extrapolated2 - CL_extrapolated1), 'o-', color='blue', label='Improvement Horizontal')
+    plt.plot(aoa_values, (CL_extrapolated3 - CL_extrapolated1), 'o-', color='red', label='Improvement Vertical')
+    plt.xlabel('Angle of Attack (°)')
+    plt.ylabel('CL Difference')
+    plt.title('Difference in Extrapolated CL Compared to CL_SOLID')
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+
+    # --- Relative Improvement vs AoA ---
+    plt.figure()
+    plt.plot(aoa_values, (CL_extrapolated2 - CL_extrapolated1)/CL_extrapolated2, 'o-', color='blue', label='Improvement Horizontal')
+    plt.plot(aoa_values, (CL_extrapolated3 - CL_extrapolated1)/CL_extrapolated3, 'o-', color='red', label='Improvement Vertical')
+    plt.xlabel('Angle of Attack (°)')
+    plt.ylabel('CL Difference')
+    plt.title('Relative improvement of CL Compared to CL_SOLID')
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
     
 def PLOT_ALL(flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma):

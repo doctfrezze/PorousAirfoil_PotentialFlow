@@ -12,6 +12,9 @@ def GENERATE_NACA4(NameAirfoil, c=1.0, NumPan=100, power=1.0):
     p = int(NameAirfoil[1])*0.1
     t = int(NameAirfoil[2:4])*0.01
     beta = np.linspace(0, np.pi, n)
+    if NumPan%2==1:
+        beta = np.linspace(-np.pi,np.pi,NumPan+1)
+        beta = beta[n-1:]
     x_dist = (1 - np.cos(beta)) / 2
     x = (x_dist**power) * c
     #yt = np.sqrt((0.25-(x-0.5)*(x-0.5))/9)

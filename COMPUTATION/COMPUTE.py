@@ -183,15 +183,24 @@ def COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_character
 
         CL = sum(-Cp[i]*S[i]*np.sin(beta[i]) for i in low_point)                                    # Normal force coefficient []
         CL += sum(-Cp[i]*S[i]*np.sin(beta[i]) for i in high_point)
-        CL += sum(-Cp_inter_low*S_pore_low*np.sin(phi_pore_low+(np.pi/2)-AoAR))
-        CL += sum(-Cp_inter_high*S_pore_high*np.sin(phi_pore_high+(np.pi/2)-AoAR))
+        """CL += sum(-Cp_inter_low*S_pore_low*np.sin(phi_pore_low+(np.pi/2)-AoAR))
+        CL += sum(-Cp_inter_high*S_pore_high*np.sin(phi_pore_high+(np.pi/2)-AoAR))"""
         CL += -2*Delta_Cp*A*np.sin(phi_pore_high[0])
 
         CD = sum(-Cp[i]*S[i]*np.cos(beta[i]) for i in low_point)
+        #print('1 : ',CD)
         CD += sum(-Cp[i]*S[i]*np.cos(beta[i]) for i in high_point)
-        CD += sum(-Cp_inter_low*S_pore_low*np.cos(phi_pore_low+(np.pi/2)-AoAR))
+        #print('2 : ',CD)
+        """CD += sum(-Cp_inter_low*S_pore_low*np.cos(phi_pore_low+(np.pi/2)-AoAR))
+        print('3 : ',CD)
+        print("Cp_inter_low  : ",Cp_inter_low)
+        print("cos : ",np.cos(phi_pore_low+(np.pi/2)-AoAR))
         CD += sum(-Cp_inter_high*S_pore_high*np.cos(phi_pore_high+(np.pi/2)-AoAR))
+        print('4 : ',CD)
+        print("Cp_inter_high  : ",Cp_inter_high)
+        print("cos : ",np.cos(phi_pore_high+(np.pi/2)-AoAR))"""
         CD += -2*Delta_Cp*A*np.cos(phi_pore_high[0])
+        #print('5 : ',CD)
 
         
         Y = np.zeros(len(XC))

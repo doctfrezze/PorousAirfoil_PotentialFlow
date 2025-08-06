@@ -5,7 +5,7 @@ import math as math
 
 from COMPUTATION.COMPUTE import *
 from PLOT import PLOT_ALL
-from GEOMETRY.NACA import GENERATE_NACA4
+from GEOMETRY.ELLIPSE import GENERATE_ELLIPSE
 from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY
 from GEOMETRY.PANEL_DIRECTIONS import PANEL_DIRECTIONS
 
@@ -65,10 +65,10 @@ def SPVP(Fluid_characteristics,Airfoil_geometry,Pore_characteristics={},is_porou
     CL,CM,CD = COMPUTE_LIFT_MOMENT(Cp,Fluid_characteristics,Airfoil_geometry,Pore_characteristics)
     return Cp,lam,gamma,CL,CM,CD
 
-def SOLID_AIRFOIL(NameAirfoil,numPan,power,AoA,Vinf,rhoinf,Re):
+def SOLID_ELLIPSE(numPan,power,AoA,Vinf,rhoinf,Re):
     #%% initialisation
     AoAR = AoA*np.pi/180
-    XB, YB = GENERATE_NACA4(NameAirfoil,NumPan=numPan,power=power)
+    XB, YB = GENERATE_ELLIPSE(NumPan=numPan,power=power)
     XC,YC,S,phi,delta,beta = GENERATE_GEOMETRY(numPan,XB,YB,AoAR)
     mu = Vinf*rhoinf/Re
 
@@ -92,8 +92,7 @@ def SOLID_AIRFOIL(NameAirfoil,numPan,power,AoA,Vinf,rhoinf,Re):
         'delta' : delta,
         'beta' : beta,
         'numPan' : numPan,
-        'power' : power,
-        'NameAirfoil' : NameAirfoil
+        'power' : power
     }
 
     #%% SPVP CALCULATION
@@ -125,7 +124,7 @@ if __name__ == '__main__':
     NameAirfoil = "0018"
     power = 1
 
-    Fluid_characteristics,Airfoil_geometry,Cp,lam,gamma,CL,CM,CD = SOLID_AIRFOIL(NameAirfoil,numPan,power,AoA,Vinf,rhoinf,Re)
+    Fluid_characteristics,Airfoil_geometry,Cp,lam,gamma,CL,CM,CD = SOLID_ELLIPSE(NameAirfoil,numPan,power,AoA,Vinf,rhoinf,Re)
 
     # Extract Result
     XB = Airfoil_geometry['XB']

@@ -6,23 +6,14 @@ import matplotlib.pyplot as plt
 
 from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY
 
-def GENERATE_ELLIPSE(NameAirfoil, c=1.0, NumPan=100, power=1.0):
+def GENERATE_ELLIPSE(c=1.0, NumPan=100, power=1.0):
     n = int(NumPan / 2 + 1)
-    m = int(NameAirfoil[0])*0.01
-    p = int(NameAirfoil[1])*0.1
-    t = int(NameAirfoil[2:4])*0.01
     beta = np.linspace(0, np.pi, n)
     x_dist = (1 - np.cos(beta)) / 2
     x = (x_dist**power) * c
     yt = np.sqrt((0.25-(x-0.5)*(x-0.5))/9)
-    #yt = 5 * t * c * (0.2969 * np.sqrt(x / c) - 0.1260 * (x / c) - 0.3516 * (x / c)**2 
-                      #+ 0.2843 * (x / c)**3 - 0.1036 * (x / c)**4)
-    
-    if m == 0 and p == 0:
-        xu, yu = x, yt
-        xl, yl = x, -yt
-    else:
-        xu,yu,xl,yl = NON_SYMETRIES(x,c,p,m,yt)
+    xu, yu = x, yt
+    xl, yl = x, -yt
     
     return np.append(xl[::-1], xu[1:]), np.append(yl[::-1], yu[1:])
 
