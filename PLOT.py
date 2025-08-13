@@ -5,6 +5,13 @@ import math as math
 import matplotlib.pyplot as plt
 from matplotlib import path
 from scipy.interpolate import interp1d
+import os
+
+# Chemin complet du fichier
+path = "SAVE_FIGURE/RESULT/Cp.pdf"
+# Créer le dossier si nécessaire
+os.makedirs(os.path.dirname(path), exist_ok=True)
+
 
 from COMPUTATION.COMPUTE import STREAMLINE_SPM
 from COMPUTATION.COMPUTE import STREAMLINE_VPM
@@ -323,6 +330,8 @@ def plot_convergence(h_list, CL_matrix, CD_matrix, CL_extrapolated, CD_extrapola
 
     for i in range(num_aoa):
         aoa = aoa_values[i]
+        print(i)
+        print(num_aoa)
 
         # Original data
         h_vals = np.array(h_list)
@@ -365,49 +374,63 @@ def plot_convergence(h_list, CL_matrix, CD_matrix, CL_extrapolated, CD_extrapola
 def plot_extrapolated_vs_aoa(aoa_values, CL_extrapolated1, CD_extrapolated1,  CL_extrapolated2, CD_extrapolated2,  CL_extrapolated3, CD_extrapolated3):
     # --- CL vs AoA ---
     plt.figure()
-    plt.plot(aoa_values, CL_extrapolated1, 'o-', color='blue', label='Extrapolated CL Solid')
-    plt.plot(aoa_values, CL_extrapolated2, 'o-', color='red', label='Extrapolated CL Horizontal')
-    plt.plot(aoa_values, CL_extrapolated3, 'o-', color='green', label='Extrapolated CL vertical')
-    plt.xlabel('Angle of Attack (°)')
-    plt.ylabel('Extrapolated CL')
-    plt.title('Extrapolated CL as a Function of AoA')
+    plt.plot(aoa_values, CL_extrapolated1, 'o-', color='green', label='Solid')
+    plt.plot(aoa_values, CL_extrapolated2, 'o-', color='black', label='Horizontal')
+    plt.plot(aoa_values, CL_extrapolated3, 'o-', color='red', label='Vertical')
+    plt.xlabel('Angle of Attack (°)',fontsize = 14)
+    plt.ylabel('Extrapolated CL',fontsize = 14)
+    plt.tick_params(axis='both', labelsize=14)
+    #plt.title('Extrapolated CL as a Function of AoA',fontsize = 16)
     plt.grid(True)
-    plt.legend()
+    plt.legend(fontsize=14)
     plt.tight_layout()
+    plt.savefig("SAVE_FIGURE/RESULT/CL_vs_AoA.pdf", format="pdf")
 
     # --- CD vs AoA ---
     plt.figure()
-    plt.plot(aoa_values, CD_extrapolated1, 'o-', color='blue', label='Extrapolated CD Solid')
-    plt.plot(aoa_values, CD_extrapolated2, 'o-', color='red', label='Extrapolated CD Horizontal')
-    plt.plot(aoa_values, CD_extrapolated3, 'o-', color='green', label='Extrapolated CD Vertical')
-    plt.xlabel('Angle of Attack (°)')
-    plt.ylabel('Extrapolated CD')
-    plt.title('Extrapolated CD as a Function of AoA')
+    plt.plot(aoa_values, CD_extrapolated1, 'o-', color='green', label='Solid')
+    plt.plot(aoa_values, CD_extrapolated2, 'o-', color='black', label='Horizontal')
+    plt.plot(aoa_values, CD_extrapolated3, 'o-', color='red', label='Vertical')
+    plt.xlabel('Angle of Attack (°)',fontsize = 14)
+    plt.ylabel('Extrapolated CD',fontsize = 14)
+    plt.tick_params(axis='both', labelsize=14)
+    #plt.title('Extrapolated CD as a Function of AoA',fontsize = 16)
     plt.grid(True)
-    plt.legend()
+    plt.legend(fontsize=14)
     plt.tight_layout()
+    plt.savefig("SAVE_FIGURE/RESULT/CD_vs_AoA.pdf", format="pdf")
 
     # --- CL-CL_SOLID vs AoA ---
     plt.figure()
-    plt.plot(aoa_values, (CL_extrapolated2 - CL_extrapolated1), 'o-', color='blue', label='Improvement Horizontal')
-    plt.plot(aoa_values, (CL_extrapolated3 - CL_extrapolated1), 'o-', color='red', label='Improvement Vertical')
-    plt.xlabel('Angle of Attack (°)')
-    plt.ylabel('CL Difference')
-    plt.title('Difference in Extrapolated CL Compared to CL_SOLID')
+    plt.plot(aoa_values, (CL_extrapolated2 - CL_extrapolated1), 'o-', color='black', label='Horizontal')
+    plt.plot(aoa_values, (CL_extrapolated3 - CL_extrapolated1), 'o-', color='red', label='Vertical')
+    plt.xlabel('Angle of Attack (°)',fontsize = 14)
+    plt.ylabel('CL Difference',fontsize = 14)
+    plt.tick_params(axis='both', labelsize=14)
+    #plt.title('Difference in Extrapolated CL Compared to CL_SOLID',fontsize = 16)
     plt.grid(True)
-    plt.legend()
+    plt.legend(fontsize=14)
     plt.tight_layout()
+    plt.savefig("SAVE_FIGURE/RESULT/CL_Diff_vs_AoA.pdf", format="pdf")
 
     # --- Relative Improvement vs AoA ---
     plt.figure()
-    plt.plot(aoa_values, (CL_extrapolated2 - CL_extrapolated1)/CL_extrapolated2, 'o-', color='blue', label='Improvement Horizontal')
-    plt.plot(aoa_values, (CL_extrapolated3 - CL_extrapolated1)/CL_extrapolated3, 'o-', color='red', label='Improvement Vertical')
-    plt.xlabel('Angle of Attack (°)')
-    plt.ylabel('CL Difference')
-    plt.title('Relative improvement of CL Compared to CL_SOLID')
+    aoa_values = np.delete(aoa_values,5)
+    CL_extrapolated1 = np.delete(CL_extrapolated1,5)
+    CL_extrapolated2 = np.delete(CL_extrapolated2,5)
+    CL_extrapolated3 = np.delete(CL_extrapolated3,5)
+    print(aoa_values)
+    plt.plot(aoa_values, (CL_extrapolated2 - CL_extrapolated1)/abs(CL_extrapolated1), 'o-', color='black', label='Horizontal')
+    plt.plot(aoa_values, (CL_extrapolated3 - CL_extrapolated1)/abs(CL_extrapolated2), 'o-', color='red', label='Vertical')
+    plt.xlabel('Angle of Attack (°)',fontsize = 14)
+    plt.ylabel('CL Difference',fontsize = 14)
+    plt.tick_params(axis='both', labelsize=14)
+    #plt.title('Relative improvement of CL Compared to CL_SOLID',fontsize = 16)
     plt.grid(True)
-    plt.legend()
+    plt.legend(fontsize=14)
     plt.tight_layout()
+
+    plt.savefig("SAVE_FIGURE/RESULT/CL_Improvement_vs_AoA.pdf", format="pdf")
     plt.show()
 
     

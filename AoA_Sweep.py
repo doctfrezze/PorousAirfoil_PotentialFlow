@@ -3,7 +3,7 @@ import math as math
 import matplotlib.pyplot as plt
 
 from COMPUTATION.Hydraulic_Resistance import Hydraulic_Resistance
-from Porous_SPVP import INIT_POROUS_GEOMETRY, POROUS_SPVP
+from COMPUTATION.Porous_SPVP import INIT_POROUS_GEOMETRY, POROUS_SPVP
 
 if __name__ == "__main__":
     CL_porous_list = []

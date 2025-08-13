@@ -49,16 +49,20 @@ def COMPUTE_b_SPVP(Airfoil_geometry,Fluid_characteristics,Delta_Cp,Pore_characte
 
 
     b = np.zeros(numPan)                                                            # Initialize the b array
+    if is_porous:
+        V_mean = 0.5*rhoinf*Vinf**2*Delta_Cp/Rs*n/a
+        Re_laminar = Dh*rhoinf*abs(V_mean)/mu
+        if Re_laminar >= 2000:                                                      #Turbulence
+            Delta_P = Delta_Cp*0.5*rhoinf*Vinf**2
+            V_mean=2.868*((Delta_P**4)*(Dh**5)/((L**4)*mu*(rhoinf**3)))**(1/7)
+            Re_turbulent = Dh*rhoinf*abs(V_mean)/mu
+            print("TURBULENT.    RE =",Re_turbulent)
+        else: 
+            print("LAMINAR.    RE =", Re_laminar)
     for i in range(numPan):                                                         # Loop over all i panels (rows)
         if is_porous:
-            normal_vs_pore_in = delta[i]-np.pi*(omega_in)/180
-            normal_vs_pore_out = delta[i]-np.pi*(omega_out)/180
-            V_mean = 0.5*rhoinf*Vinf**2*Delta_Cp/Rs*n/a
-            Re_laminar = Dh*rhoinf*abs(V_mean)/mu
-            if Re_laminar >= 2000:                                                      #Turbulence
-                Delta_P = Delta_Cp*0.5*rhoinf*Vinf**2
-                V_mean=2.868*((Delta_P**4)*(Dh**5)/((L**4)*mu*(rhoinf**3)))**(1/7)
-                Re_turbulent = Dh*rhoinf*abs(V_mean)/mu
+            #normal_vs_pore_in = delta[i]-np.pi*(omega_in)/180
+            #normal_vs_pore_out = delta[i]-np.pi*(omega_out)/180
             if i in pore_entry:
                 b[i] = -Vinf*2*np.pi*np.cos(beta[i]) + V_mean#*np.cos(normal_vs_pore_in) # Compute RHS array
             elif i in pore_out:

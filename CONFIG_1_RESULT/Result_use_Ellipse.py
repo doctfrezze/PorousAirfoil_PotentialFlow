@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Richardson_extrapolation import extrapolate_matrices
+from COMPUTATION.Richardson_extrapolation import extrapolate_matrices
 from PLOT import plot_convergence, plot_extrapolated_vs_aoa
 
 #%% Case 1

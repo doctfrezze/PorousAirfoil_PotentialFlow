@@ -3,7 +3,7 @@ import math as math
 import matplotlib.pyplot as plt
 
 
-from SPVP_Airfoil import SPVP
+from COMPUTATION.SPVP_Airfoil import SPVP
 from COMPUTATION.Hydraulic_Resistance import Hydraulic_Resistance
 from PLOT import *
 from GEOMETRY.Hydraulic_GEOMETRY import *

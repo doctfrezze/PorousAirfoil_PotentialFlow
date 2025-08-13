@@ -12,7 +12,7 @@ import numpy as np
 import math as math
 
 # Importing custom modules from the project
-from SPVP_Airfoil import SPVP                          # Main SPVP computation function
+from COMPUTATION.SPVP_Airfoil import SPVP                          # Main SPVP computation function
 from PLOT import PLOT_ALL                              # Function to generate all plots
 from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY        # Function to compute geometry from boundary points
 from GEOMETRY.ELLIPSE import GENERATE_ELLIPSE, GENERATE_EQUAL_ELLIPSE               # Function to generate NACA 4-digit airfoils

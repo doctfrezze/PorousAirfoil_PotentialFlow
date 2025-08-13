@@ -13,7 +13,7 @@ import math as math
 
 from PLOT import *
 from COMPUTATION.Hydraulic_Resistance import Hydraulic_Resistance
-from Porous_SPVP import POROUS_SPVP, INIT_POROUS_GEOMETRY
+from COMPUTATION.Porous_SPVP import POROUS_SPVP, INIT_POROUS_GEOMETRY
 
 if __name__ == "__main__":
     
@@ -22,12 +22,12 @@ if __name__ == "__main__":
     # Freestream conditions
     Vinf = 1                # Freestream velocity [arbitrary units]
     rhoinf = 1              # Freestream density [arbitrary units]
-    Re = 160000             # Reynolds number
-    AoA = 4                 # Angle of attack [degrees]
+    Re = 100000             # Reynolds number
+    AoA = 1                 # Angle of attack [degrees]
     
     # Airfoil definition
-    numPan = 100            # Number of panels on the airfoil surface
-    power = 3               # Spacing control parameter (point clustering)
+    numPan = 500            # Number of panels on the airfoil surface
+    power = 1               # Spacing control parameter (point clustering)
     NameAirfoil = "0018"    # NACA 4-digit airfoil designation
     
     # Plotting options (1 = plot, 0 = skip)
@@ -40,14 +40,12 @@ if __name__ == "__main__":
 
     # Porous region geometry
     type = 'rectangle'                      # Pore shape
-    pore_geometry = [0.157, 0.010]          # Dimensions of the pore section
+    pore_geometry = [0.157, 0.0125]          # Dimensions of the pore section
     L = 0.89                                # Length of the porous medium
-    a = 0.010                               # Height of the pores
+    a = 0.0125                               # Height of the pores
     n = 1 / 0.166                           # Porosity coefficient (1/spacing)
-    entry_point = 36                        # Panel index of pore entry
-    out_point = 5                           # Panel index of pore exit
-    omega_in = 0                            # Inlet loss coefficient
-    omega_out = 0                           # Outlet loss coefficient
+    y0 = -0.02
+    angle_pore = 0
 
     # Convergence criteria for the porous solver
     max_iter = 100                          # Max number of iterations
@@ -67,14 +65,11 @@ if __name__ == "__main__":
 
     # Generate airfoil geometry and porous geometry configuration
     AoAR = AoA * np.pi / 180  # Recompute AoAR (redundant but harmless)
-    XB, YB, XC, YC, S, phi, delta, beta, entry_point, out_point, numPan, \
-    pore_entry, pore_exit, omega_in, omega_out, low_point, high_point, \
-    pore_intern_co_XB_low, pore_intern_co_YB_low, \
-    pore_intern_co_XB_high, pore_intern_co_YB_high, \
-    S_pore_low, phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low, \
-    S_pore_high, phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high = \
-        INIT_POROUS_GEOMETRY(AoA, NameAirfoil, numPan, omega_in, omega_out,
-                             out_point, entry_point, a, power=power, is_straight=1)
+    XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out,low_point,high_point,\
+        pore_intern_co_XB_low,pore_intern_co_YB_low,pore_intern_co_XB_high,\
+        pore_intern_co_YB_high,S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low,S_pore_high,phi_pore_high, \
+        pore_intern_co_XC_high, pore_intern_co_YC_high,entry_point, out_point = \
+        INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,y0,angle_pore, a, power=power, is_straight=1)
 
     #%% DEFINE MAIN DICTIONARIES
 
@@ -151,18 +146,19 @@ if __name__ == "__main__":
                        label1='Porous', label2='Solid', alone=False)
 
     # Plot Cp distribution on the pressure side
-    PLOT_CP_PRESSURE_SIDE(XC, YC, Cp, Cp_inter_low, low_point,
+    """PLOT_CP_PRESSURE_SIDE(XC, YC, Cp, Cp_inter_low, low_point,
                           pore_intern_co_XC_low, alone=False)
 
     # Plot Cp distribution on the suction side
     PLOT_CP_SUCCION_SIDE(XC, YC, Cp, Cp_inter_high, high_point,
                          pore_intern_co_XC_high, alone=False)
-
+    """
     # Print aerodynamic coefficients
     print('CL_Porous = ', CL)
     print('CL_solid = ', CL_Solid)
     print('CD_Porous = ', CD)
     print('CD_solid = ', CD_Solid)
+    print('CL_improvement = ', (CL-CL_Solid)/CL)
 
     # Final plot: full diagnostics depending on flags
     PLOT_ALL(flagPlot, XB, YB, numPan, XC, YC, S, delta, Cp, phi, Vinf, AoA, lam, gamma)

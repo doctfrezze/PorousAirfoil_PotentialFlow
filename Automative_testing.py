@@ -4,13 +4,11 @@ import math as math
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from Porous_SPVP import POROUS_AIRFOIL, POROUS_ELLIPSE
-from SPVP_Airfoil import SOLID_AIRFOIL
-from SPVP_Ellipse import SOLID_ELLIPSE
-from Richardson_extrapolation import RICHARDSON_EXTRAPOLATION
+from COMPUTATION.Porous_SPVP import POROUS_AIRFOIL, POROUS_ELLIPSE
+from COMPUTATION.SPVP_Airfoil import SOLID_AIRFOIL
+from COMPUTATION.SPVP_Ellipse import SOLID_ELLIPSE
 from GEOMETRY.NACA import GENERATE_NACA4
 from GEOMETRY.GEOMETRY import GENERATE_GEOMETRY
-from CSV_SAVE import CSV_SAVE
 from PLOT import PLOT_AIRFOIL
 
 
@@ -23,7 +21,7 @@ if __name__ == "__main__":
     NumPan_sweep = np.array([250,500,1000])
     Vinf = 1                                                                        # Freestream velocity [] (just leave this at 1)
     rhoinf = 1                                                                      # Density [] (just leave this at 1)
-    Re = 160000                                                                      # Reynolds number
+    Re = 100000                                                                      # Reynolds number
     power = 1
     NameAirfoil = "0018"
 
@@ -36,6 +34,7 @@ if __name__ == "__main__":
     #%% Case 1 : Solid NACA 0018
     XB,YB = GENERATE_NACA4(NameAirfoil,NumPan=10000)
     S = GENERATE_GEOMETRY(10000,XB,YB,AoAR=0)[2]
+    print("Length =", sum(S))
     CL_list_1 = np.zeros([len(AoA_sweep),len(NumPan_sweep)])
     CD_list_1 = np.zeros([len(AoA_sweep),len(NumPan_sweep)])
     j = 0
@@ -85,9 +84,9 @@ if __name__ == "__main__":
     #%% Case 2 : Porous NACA 0018 with horizontal pores
     #Pore geometry
     type = 'rectangle'
-    pore_geometry = [0.157,0.007]
+    pore_geometry = [0.157,0.014]
     L = 0.89
-    a = 0.007                       #Height of the pores
+    a = 0.014                       #Height of the pores
     n = 1/0.166
     y0 = -0.01
     angle_pore = 0
@@ -131,9 +130,9 @@ if __name__ == "__main__":
 
     #Pore geometry
     type = 'rectangle'
-    pore_geometry = [0.157,0.007]
+    pore_geometry = [0.157,0.014]
     L = 0.89
-    a = 0.007                       #Height of the pores
+    a = 0.014                       #Height of the pores
     n = 1/0.166
     y0 = 0.2
     angle_pore = 90
@@ -210,9 +209,9 @@ if __name__ == "__main__":
     #%% Case 5 : Porous ellipse with horizontal pores
     #Pore geometry
     type = 'rectangle'
-    pore_geometry = [0.157,0.007]
+    pore_geometry = [0.157,0.0125]
     L = 0.89
-    a = 0.007                       #Height of the pores
+    a = 0.0125                       #Height of the pores
     n = 1/0.166
     y0 = -0.01
     angle_pore = -10
@@ -260,9 +259,9 @@ if __name__ == "__main__":
 
     #Pore geometry
     type = 'rectangle'
-    pore_geometry = [0.157,0.007]
+    pore_geometry = [0.157,0.0125]
     L = 0.89
-    a = 0.007                       #Height of the pores
+    a = 0.0125                       #Height of the pores
     n = 1/0.166
     y0 = 0.2
     angle_pore = 90

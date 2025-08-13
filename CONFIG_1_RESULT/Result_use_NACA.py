@@ -1,13 +1,18 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+import os
 
-from Richardson_extrapolation import extrapolate_matrices
+# Ajoute le dossier parent du script (le dossier Projet) au PYTHONPATH
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from COMPUTATION.Richardson_extrapolation import extrapolate_matrices
 from PLOT import plot_convergence, plot_extrapolated_vs_aoa
 
 #%% Case 1
 # Lecture du fichier CSV
-df = pd.read_csv("resultats_simulations_Airfoil1.csv")
+df = pd.read_csv("First_config_results/resultats_simulations_Airfoil1.csv")
 
 # Tri des valeurs uniques de AoA et NumPan
 aoa_values = sorted(df['AoA'].unique())
@@ -30,12 +35,12 @@ CL_matrix_extrapolated1, CD_matrix_extrapolated1,h = extrapolate_matrices(CL_mat
 # h_list = 1 / NumPan_values
 h_list = [max(numpan_values) / n for n in numpan_values]
 
-plot_convergence(h_list, CL_matrix, CD_matrix, CL_matrix_extrapolated1, CD_matrix_extrapolated1, aoa_values)
+#plot_convergence(h_list, CL_matrix, CD_matrix, CL_matrix_extrapolated1, CD_matrix_extrapolated1, aoa_values)
 
 
 #%% Case 2
 # Lecture du fichier CSV
-df = pd.read_csv("resultats_simulations_Airfoil2.csv")
+df = pd.read_csv("First_config_results/resultats_simulations_Airfoil2.csv")
 
 # Tri des valeurs uniques de AoA et NumPan
 aoa_values = sorted(df['AoA'].unique())
@@ -59,14 +64,14 @@ CL_matrix_extrapolated2, CD_matrix_extrapolated2,h = extrapolate_matrices(CL_mat
 # h_list = 1 / NumPan_values
 h_list = [max(numpan_values) / n for n in numpan_values]
 
-plot_convergence(h_list, CL_matrix, CD_matrix, CL_matrix_extrapolated2, CD_matrix_extrapolated2, aoa_values)
+#plot_convergence(h_list, CL_matrix, CD_matrix, CL_matrix_extrapolated2, CD_matrix_extrapolated2, aoa_values)
 
 print('Case 3 : ')
 
 
 #%% Case 3
 # Lecture du fichier CSV
-df = pd.read_csv("resultats_simulations_Airfoil3.csv")
+df = pd.read_csv("First_config_results/resultats_simulations_Airfoil3.csv")
 
 # Tri des valeurs uniques de AoA et NumPan
 aoa_values = sorted(df['AoA'].unique())
@@ -90,7 +95,7 @@ CL_matrix_extrapolated3, CD_matrix_extrapolated3,h = extrapolate_matrices(CL_mat
 # h_list = 1 / NumPan_values
 h_list = [max(numpan_values) / n for n in numpan_values]
 
-plot_convergence(h_list, CL_matrix, CD_matrix, CL_matrix_extrapolated3, CD_matrix_extrapolated3, aoa_values)
+#plot_convergence(h_list, CL_matrix, CD_matrix, CL_matrix_extrapolated3, CD_matrix_extrapolated3, aoa_values)
 
 
 
