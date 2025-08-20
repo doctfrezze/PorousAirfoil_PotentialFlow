@@ -36,7 +36,7 @@ for i, aoa in enumerate(aoa_values):
             CD_matrix[i, j] = subset['CD'].values[0]
 print('CL_matrix1 = ', CL_matrix)
 CL_matrix_extrapolated1, CD_matrix_extrapolated1,h,GCI21_l1,GCI32_l1,AR_l1,GCI21_d1,GCI32_d1,AR_d1, p_l1,p_d1 = extrapolate_matrices(CL_matrix,CD_matrix,numpan_values)
-
+print('Case 1 :', CL_matrix_extrapolated1[7])
 # h_list = 1 / NumPan_values
 h_list = [max(numpan_values)*2.076 / n for n in numpan_values]
 
@@ -78,7 +78,7 @@ for i, aoa in enumerate(aoa_values):
             CD_matrix[i, j] = subset['CD'].values[0]
 print('CL_matrix2 = ', CL_matrix)
 CL_matrix_extrapolated2, CD_matrix_extrapolated2,h,GCI21_l2,GCI32_l2,AR_l2,GCI21_d2,GCI32_d2,AR_d2, p_l2,p_d2 = extrapolate_matrices(CL_matrix,CD_matrix,numpan_values)
-
+print('Case 2 :', CL_matrix_extrapolated2[7])
 
 # h_list = 1 / NumPan_values
 h_list = [max(numpan_values)*2.076 / n for n in numpan_values]
@@ -124,7 +124,7 @@ for i, aoa in enumerate(aoa_values):
             CD_matrix[i, j] = subset['CD'].values[0]
 print('CL_matrix3 = ', CL_matrix)
 CL_matrix_extrapolated3, CD_matrix_extrapolated3,h,GCI21_l3,GCI32_l3,AR_l3,GCI21_d3,GCI32_d3,AR_d3, p_l3,p_d3 = extrapolate_matrices(CL_matrix,CD_matrix,numpan_values)
-
+print('Case 3 :', CL_matrix_extrapolated3[7])
 
 # h_list = 1 / NumPan_values
 h_list = [max(numpan_values)*2.076 / n for n in numpan_values]

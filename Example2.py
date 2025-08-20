@@ -26,7 +26,7 @@ if __name__ == "__main__":
     AoA = 1                 # Angle of attack [degrees]
     
     # Airfoil definition
-    numPan = 500            # Number of panels on the airfoil surface
+    numPan = 50            # Number of panels on the airfoil surface
     power = 1               # Spacing control parameter (point clustering)
     NameAirfoil = "0018"    # NACA 4-digit airfoil designation
     

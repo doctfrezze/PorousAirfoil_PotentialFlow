@@ -8,9 +8,9 @@ from scipy.interpolate import interp1d
 import os
 
 # Chemin complet du fichier
-path = "SAVE_FIGURE/RESULT/Cp.pdf"
+path_file = "SAVE_FIGURE/RESULT/Cp.pdf"
 # Créer le dossier si nécessaire
-os.makedirs(os.path.dirname(path), exist_ok=True)
+os.makedirs(os.path.dirname(path_file), exist_ok=True)
 
 
 from COMPUTATION.COMPUTE import STREAMLINE_SPM
@@ -372,46 +372,48 @@ def plot_convergence(h_list, CL_matrix, CD_matrix, CL_extrapolated, CD_extrapola
 
 
 def plot_extrapolated_vs_aoa(aoa_values, CL_extrapolated1, CD_extrapolated1,  CL_extrapolated2, CD_extrapolated2,  CL_extrapolated3, CD_extrapolated3):
+    plt.rcParams["text.usetex"] = True
+    
     # --- CL vs AoA ---
     plt.figure()
     plt.plot(aoa_values, CL_extrapolated1, 'o-', color='green', label='Solid')
     plt.plot(aoa_values, CL_extrapolated2, 'o-', color='black', label='Horizontal')
     plt.plot(aoa_values, CL_extrapolated3, 'o-', color='red', label='Vertical')
     plt.xlabel('Angle of Attack (°)',fontsize = 14)
-    plt.ylabel('Extrapolated CL',fontsize = 14)
+    plt.ylabel(r" $C_{L_{Extrapolated}}$",fontsize = 18)
     plt.tick_params(axis='both', labelsize=14)
     #plt.title('Extrapolated CL as a Function of AoA',fontsize = 16)
     plt.grid(True)
-    plt.legend(fontsize=14)
+    #plt.legend(fontsize=14)
     plt.tight_layout()
-    plt.savefig("SAVE_FIGURE/RESULT/CL_vs_AoA.pdf", format="pdf")
+    plt.savefig("SAVE_FIGURE/RESULT_ELLIPSE/CL_vs_AoA.pdf", format="pdf")
 
     # --- CD vs AoA ---
     plt.figure()
     plt.plot(aoa_values, CD_extrapolated1, 'o-', color='green', label='Solid')
-    plt.plot(aoa_values, CD_extrapolated2, 'o-', color='black', label='Horizontal')
+    plt.plot(aoa_values, CD_extrapolated2, 'o-', color='black', label='Diagonal')
     plt.plot(aoa_values, CD_extrapolated3, 'o-', color='red', label='Vertical')
     plt.xlabel('Angle of Attack (°)',fontsize = 14)
-    plt.ylabel('Extrapolated CD',fontsize = 14)
+    plt.ylabel(r" $C_{D_{Extrapolated}}$",fontsize = 18)
     plt.tick_params(axis='both', labelsize=14)
     #plt.title('Extrapolated CD as a Function of AoA',fontsize = 16)
-    plt.grid(True)
+    plt.grid(False)
     plt.legend(fontsize=14)
     plt.tight_layout()
-    plt.savefig("SAVE_FIGURE/RESULT/CD_vs_AoA.pdf", format="pdf")
+    plt.savefig("SAVE_FIGURE/RESULT_ELLIPSE/CD_vs_AoA.pdf", format="pdf")
 
     # --- CL-CL_SOLID vs AoA ---
     plt.figure()
     plt.plot(aoa_values, (CL_extrapolated2 - CL_extrapolated1), 'o-', color='black', label='Horizontal')
     plt.plot(aoa_values, (CL_extrapolated3 - CL_extrapolated1), 'o-', color='red', label='Vertical')
     plt.xlabel('Angle of Attack (°)',fontsize = 14)
-    plt.ylabel('CL Difference',fontsize = 14)
+    plt.ylabel(r"$\Delta C_L$",fontsize = 18)
     plt.tick_params(axis='both', labelsize=14)
     #plt.title('Difference in Extrapolated CL Compared to CL_SOLID',fontsize = 16)
     plt.grid(True)
-    plt.legend(fontsize=14)
+    #plt.legend(fontsize=14)
     plt.tight_layout()
-    plt.savefig("SAVE_FIGURE/RESULT/CL_Diff_vs_AoA.pdf", format="pdf")
+    plt.savefig("SAVE_FIGURE/RESULT_ELLIPSE/CL_Diff_vs_AoA.pdf", format="pdf")
 
     # --- Relative Improvement vs AoA ---
     plt.figure()
@@ -422,15 +424,15 @@ def plot_extrapolated_vs_aoa(aoa_values, CL_extrapolated1, CD_extrapolated1,  CL
     print(aoa_values)
     plt.plot(aoa_values, (CL_extrapolated2 - CL_extrapolated1)/abs(CL_extrapolated1), 'o-', color='black', label='Horizontal')
     plt.plot(aoa_values, (CL_extrapolated3 - CL_extrapolated1)/abs(CL_extrapolated2), 'o-', color='red', label='Vertical')
-    plt.xlabel('Angle of Attack (°)',fontsize = 14)
-    plt.ylabel('CL Difference',fontsize = 14)
+    plt.xlabel("Angle of Attack (°)",fontsize = 14)
+    plt.ylabel(r"$\Delta_r C_L$",fontsize = 18)
     plt.tick_params(axis='both', labelsize=14)
     #plt.title('Relative improvement of CL Compared to CL_SOLID',fontsize = 16)
     plt.grid(True)
-    plt.legend(fontsize=14)
+    #plt.legend(fontsize=14)
     plt.tight_layout()
 
-    plt.savefig("SAVE_FIGURE/RESULT/CL_Improvement_vs_AoA.pdf", format="pdf")
+    plt.savefig("SAVE_FIGURE/RESULT_ELLIPSE/CL_Improvement_vs_AoA.pdf", format="pdf")
     plt.show()
 
     

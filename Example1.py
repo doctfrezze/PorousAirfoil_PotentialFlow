@@ -30,17 +30,17 @@ if __name__ == '__main__':
     AoAR = np.pi * AoA / 180  # Angle of attack [radians]
 
     # Plot flags: each 1 enables a specific visualization
-    flagPlot = [0,      # 0: Airfoil with panel normal vectors
-                0,      # 1: Geometry (boundary pts, control pts, panel indicators)
-                0,      # 2: Cp vectors along the airfoil surface
-                0,      # 3: Cp comparison plot (XFOIL vs SPVP)
-                0,      # 4: Streamlines over the airfoil
-                0]      # 5: Cp contour plot over domain
+    flagPlot = [1,      # 0: Airfoil with panel normal vectors
+                1,      # 1: Geometry (boundary pts, control pts, panel indicators)
+                1,      # 2: Cp vectors along the airfoil surface
+                1,      # 3: Cp comparison plot (XFOIL vs SPVP)
+                1,      # 4: Streamlines over the airfoil
+                1]      # 5: Cp contour plot over domain
 
     # Airfoil parameters
     numPan = 100             # Number of panels (discretization segments)
     NameAirfoil = "0018"     # NACA 4-digit airfoil code
-    power = 2/3                # Point spacing exponent for clustering near leading/trailing edges
+    power = 1                # Point spacing exponent for clustering near leading/trailing edges
 
     #%% ================================
     #          Geometry initialization
@@ -95,9 +95,7 @@ if __name__ == '__main__':
     #==================================
     # Generate all requested plots
     PLOT_ALL(
-        flagPlot, XB, YB, numPan,
-        XC, YC, S, delta, Cp, phi,
-        Vinf, AoA, lam, gamma
+        flagPlot,XB,YB,numPan,XC,YC,S,delta,Cp,phi,Vinf,AoA,lam,gamma
     )
 
     #%% ================================

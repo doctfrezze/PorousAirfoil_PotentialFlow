@@ -18,7 +18,7 @@ if __name__ == "__main__":
         rhoinf = 1                                                                      # Density [] (just leave this at 1)
         Re = 160000                                                                      # Reynolds number
         
-        numPan = 100
+        numPan = 50
         power = 1
         NameAirfoil = "0018"
         
@@ -36,10 +36,8 @@ if __name__ == "__main__":
         L = 0.89
         a = 0.01                       #Height of the pores
         n = 1/0.166
-        entry_point = 36
-        out_point = 5
-        omega_in = 0
-        omega_out = 0
+        y0 = -0.01
+        angle_pore = 0
 
         #Convergence Variables
         max_iter = 100
@@ -56,7 +54,7 @@ if __name__ == "__main__":
         AoAR = AoA*np.pi/180
         #Pores characteristics
         Rs,Dh,A = Hydraulic_Resistance(mu,L,type,pore_geometry)
-        XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out,low_point,high_point,pore_intern_co_XB_low,pore_intern_co_YB_low,pore_intern_co_XB_high,pore_intern_co_YB_high,S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low,S_pore_high,phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high = INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,omega_in,omega_out,out_point,entry_point,a,power=power,is_straight=1)
+        XB,YB,XC,YC,S,phi,delta,beta,entry_point,out_point,numPan,pore_entry,pore_exit,omega_in,omega_out,low_point,high_point,pore_intern_co_XB_low,pore_intern_co_YB_low,pore_intern_co_XB_high,pore_intern_co_YB_high,S_pore_low,phi_pore_low, pore_intern_co_XC_low, pore_intern_co_YC_low,S_pore_high,phi_pore_high, pore_intern_co_XC_high, pore_intern_co_YC_high,entry_point, out_point = INIT_POROUS_GEOMETRY(AoA,NameAirfoil,numPan,y0,angle_pore,a,power=power,is_straight=1)
 
         #%% Macro variable
         Fluid_characteristics = {
@@ -148,8 +146,8 @@ if __name__ == "__main__":
     plt.plot(AoA_list,CL_CD_porous_list,label='Porous')
     plt.plot(AoA_list,CL_CD_solid_list, label = 'Solid')
     plt.xlabel('Angle of Attack (AoA)')
-    plt.ylabel('Drag Coefficient (CD)')
-    plt.title('Drag Coefficient vs Angle of Attack')
+    plt.ylabel('CL/CD')
+    plt.title('CL/CD vs Angle of Attack')
     plt.legend()
 
     plt.show()
